@@ -21,9 +21,6 @@ class _LoginState extends State<Login> {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
-			appBar: AppBar(
-				title: const Text("Login"), 
-			),
 			body: MultiBlocProvider(
 				providers:[
 					BlocProvider<LoginBloc>(
@@ -48,7 +45,7 @@ class _LoginState extends State<Login> {
 						}
 					},
 					builder: (context, state) {
-						if (state is LoginLoadingState) {
+						if (state is RequestLoadingState) {
 							return const Center(child: CircularProgressIndicator());
 						} else {
 							return _LoginForm();

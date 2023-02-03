@@ -17,15 +17,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Dashboard"), actions: [
-          IconButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(AuthLogoutEvent());
-            },
-            icon: const Icon(Icons.logout),
-            splashRadius: 23,
-          )
-        ]),
         body: const Text("Hello"));
   }
 }

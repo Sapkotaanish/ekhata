@@ -29,5 +29,5 @@ class LoginResponseState extends LoginState{
     List<String> get props => [this.success, this.message];
 }
 
-class LoginLoadingState extends LoginState{
+class RequestLoadingState extends LoginState{
 }

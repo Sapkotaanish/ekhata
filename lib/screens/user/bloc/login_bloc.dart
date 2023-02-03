@@ -10,8 +10,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>{
     AuthBloc authBloc = new AuthBloc();
     LoginBloc() : super(LoginFormState()){
         on<LoginRequestEvent>((event, emit) async{
-            emit(LoginLoadingState());
+            emit(RequestLoadingState());
             List<String> result = await AuthService.fetchLogin(event.email, event.password);
+            emit(LoginResponseState(result[0], result[1]));
+        });
+
+        on<RegisterRequestEvent>((event, emit) async{
+            emit(RequestLoadingState());
+            print(event.email);
+            List<String> result = await AuthService.registerUser(event.email, event.password, event.address, event.phone, event.username);
+            print(result);
             emit(LoginResponseState(result[0], result[1]));
         });
     }
