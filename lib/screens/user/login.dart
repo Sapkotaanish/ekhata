@@ -63,8 +63,8 @@ class _LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<_LoginForm> {
-  String email = "sapkotaanish000@gmail.com";
-  String password = "gvFQRQ4I2@";
+  String email = "test@gmail.com";
+  String password = "test";
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
