@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'user/login.dart';
 import './dashboard.dart';
 import './user/register.dart';
@@ -6,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ekhata/bloc/auth_state.dart';
 import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_event.dart';
+import 'user/profile.dart';
+import 'package:ekhata/services/storage_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,10 +18,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool showLogin = true;
+  String avatarURL = "";
+
+  void setAvatar() async{
+    final StorageService _storageService = StorageService();
+    final user = await _storageService.read('user');
+    final userObj = jsonDecode(user ?? "");
+    setState(() {
+      avatarURL = userObj['avatar'] ?? "";
+    });
+  }
+
+  void initState(){
+	setAvatar();
+  }
 
 	void toggleForm() {
-		print("toggleform");
-		print(showLogin);
     	setState(() {
     		showLogin = !showLogin;
     	});
@@ -44,13 +59,20 @@ class _HomeState extends State<Home> {
 							actions: ( () {
 								if(state is AuthAuthenticatedState){
 									return [
-										IconButton(
-            								onPressed: () {
-              									context.read<AuthBloc>().add(AuthLogoutEvent());
+										InkWell(
+            								onTap: () {
+												Navigator.push(
+													context,
+													MaterialPageRoute(builder: (context) => Profile()),
+												);
+              									// context.read<AuthBloc>().add(AuthLogoutEvent());
             								},
-            								icon: const Icon(Icons.logout),
-            								splashRadius: 23,
-          								)
+
+											child: CircleAvatar(
+												backgroundImage: NetworkImage(avatarURL),
+												backgroundColor: Colors.brown.shade800,
+          									)
+										)
         							];
 								}
 							}())
@@ -75,28 +97,17 @@ class _HomeState extends State<Home> {
 													toggleForm();
 												}, 
 												child: Center(
-													// padding: EdgeInsets.all(12.0),
 													child: Text(
 														showLogin 
 														? "Don't have an account? Register Here." 
 														: "Already got an account? Login Here.",
 														textAlign: TextAlign.center,
 													)
-												// 	text: showLogin ? "Register" : "Login",
-												// 	style: TextStyle(
-              									// 		fontSize: 20.0,
-              									// 		color: Colors.blue[800],
-            									// 	),
 												)
 											),
 										)
-										// Login(),
-										// Register(),
-										// showLogin ? Login() : Register(),
-										// Text("Hello world"),
 									]
 								);
-        					//   return Login();
         					} else {
             					return Dashboard();
 							}

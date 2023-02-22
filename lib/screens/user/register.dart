@@ -63,30 +63,22 @@ class _RegisterForm extends StatefulWidget{
 }
 
 class _RegisterFormState extends State<_RegisterForm>{
-    String email = "text@gmail.com";
-    String password = "text@gmail.com";
-    String phone = "9876543210";
-    String address = "chitwan";
-    String username = "testuser";
+    String email = "sapkotaanish000@gmail.com";
+    String password = "aaa";
+    String password2 = "aaa";
 
 
     final _formKey = GlobalKey<FormState>();
     final _emailController = TextEditingController();
     final _passwordController = TextEditingController();
-    // final _password2Controller = TextEditingController();
-    final _addressController = TextEditingController();
-    final _phoneController = TextEditingController();
-    final _usernameController = TextEditingController();
+    final _password2Controller = TextEditingController();
 
     @override
     void initState() {
         super.initState();
         _emailController.value = _emailController.value.copyWith(text: email);
-        _passwordController.value =
-            _passwordController.value.copyWith(text: password);
-        _addressController.value = _addressController.value.copyWith(text: address);
-        _phoneController.value = _phoneController.value.copyWith(text: phone);
-        _usernameController.value = _usernameController.value.copyWith(text: username);
+        _passwordController.value = _passwordController.value.copyWith(text: password);
+        _password2Controller.value = _password2Controller.value.copyWith(text: password2);
     }
 
     void _submitLogin(BuildContext context) {
@@ -95,9 +87,7 @@ class _RegisterFormState extends State<_RegisterForm>{
             RegisterRequestEvent(
                 _emailController.text,
                 _passwordController.text,
-                _addressController.text,
-                _phoneController.text,
-                _usernameController.text
+                _password2Controller.text,
             ));
         }
     }
@@ -108,27 +98,15 @@ class _RegisterFormState extends State<_RegisterForm>{
         });
     }
 
-    void _onUsernameChange(String text) {
-        setState(() {
-            username = text;
-        });
-    }
-
     void _onPasswordChange(String text) {
         setState(() {
             password = text;
         });
     }
 
-    void _onAddressChange(String text) {
+    void _onPassword2Change(String text) {
         setState(() {
-            address = text;
-        });
-    }
-
-    void _onPhoneChange(String text) {
-        setState(() {
-            phone = text;
+            password2 = text;
         });
     }
 
@@ -163,22 +141,12 @@ class _RegisterFormState extends State<_RegisterForm>{
                 },
             ),
             TextFormField(
-                controller: _addressController,
-                onChanged: this._onAddressChange,
-                decoration: InputDecoration(hintText: 'Address'),
+                controller: _password2Controller,
+                onChanged: this._onPassword2Change,
+                decoration: InputDecoration(hintText: 'Password'),
                 validator: (value) {
                     if (value == null || value.isEmpty) {
-                    return "Address is required";
-                    }
-                },
-            ),
-            TextFormField(
-                controller: _phoneController,
-                onChanged: this._onPhoneChange,
-                decoration: InputDecoration(hintText: 'Phone'),
-                validator: (value) {
-                    if (value == null || value.isEmpty) {
-                        return "Phone is required";
+                    return "Password is required";
                     }
                 },
             ),

@@ -15,14 +15,12 @@ class LoginRequestEvent extends LoginEvent{
 class RegisterRequestEvent extends LoginEvent{
     final String email;
     final String password;
-    final String address;
-    final String phone;
-    final String username;
+    final String password2;
 
-    const RegisterRequestEvent(this.email, this.password, this.address, this.phone, this.username);
+    const RegisterRequestEvent(this.email, this.password, this.password2);
 
     @override
-    List<String> get params => [this.email, this.password, this.address, this.phone, this.username];
+    List<String> get params => [this.email, this.password, this.password2];
 }
 
 class LoginResponseEvent extends LoginEvent{

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:crypto/crypto.dart';
 import '../model/user.dart';
 import 'dart:io';
+import 'dart:convert';
 import 'auth_state.dart';
 import 'auth_event.dart';
 import '../services/auth_service.dart';
@@ -12,22 +14,42 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>{
         on<AuthLogoutEvent>((event, emit) async{
             emit(AuthLoadingState());
             final StorageService _storageService = StorageService();
-            await _storageService.delete('cookie');
+            await _storageService.delete('accessToken');
+            await _storageService.delete('user');
             emit(AuthUnAuthenticatedState());
         });
          
         on<AuthRequestEvent>((event, emit) async{
             emit(AuthLoadingState());
             final StorageService _storageService = StorageService();
-            if(!(await _storageService.contains('jwt'))){
+            if(!(await _storageService.contains('accessToken'))){
                 emit(AuthUnAuthenticatedState());
             }else{
-                Map<String, dynamic> result = await AuthService.getProfile();
-                if(result['success']){
-                    User currentUser = new User(result['data']['email'], result['data']['firstName'], result['data']['lastName']);
-                    emit(AuthAuthenticatedState(currentUser));
+
+                Map<String, dynamic> results = await AuthService.getProfile();
+                if(results['success']){
+                    print(results);
+                    Map<String, dynamic> result = results["data"]?[0];
+                    String email = result['email'] ?? "";
+                    String avatar = "";
+                    if(result['avatar'] != ""){
+                        avatar = result['avatar'];
+                    }else{
+                        String hash = md5.convert(utf8.encode(email)).toString();
+                        avatar = "https://secure.gravatar.com/avatar/$hash/?d=wavatar";
+                    };
+                    String username = result['username'] ?? "";
+                    String userString = jsonEncode({
+                        "email": email,
+                        "avatar": avatar,
+                        "username": username 
+                    });
+
+                    _storageService.write('user', userString);
+                    emit(AuthAuthenticatedState());
                 }else{
-                    _storageService.delete('cookie');
+                    _storageService.delete('accessToken');
+                    _storageService.delete('user');
                     emit(AuthUnAuthenticatedState());
                 }
             }

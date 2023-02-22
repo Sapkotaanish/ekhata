@@ -17,9 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>{
 
         on<RegisterRequestEvent>((event, emit) async{
             emit(RequestLoadingState());
-            print(event.email);
-            List<String> result = await AuthService.registerUser(event.email, event.password, event.address, event.phone, event.username);
-            print(result);
+            List<String> result = await AuthService.registerUser(event.email, event.password, event.password2);
             emit(LoginResponseState(result[0], result[1]));
         });
     }

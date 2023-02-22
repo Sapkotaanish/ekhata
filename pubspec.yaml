@@ -40,6 +40,7 @@ dependencies:
   equatable: ^2.0.1
   http: ^0.13.5
   flutter_secure_storage: ^5.0.2
+  crypto: ^3.0.2
 
 dev_dependencies:
   flutter_test:

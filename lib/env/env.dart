@@ -1,1 +1,1 @@
-const BACKEND_URL = "https://api.aakhyaan.org";
+const BACKEND_URL = "https://myy.fly.dev";
