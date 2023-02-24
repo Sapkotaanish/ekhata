@@ -1,1 +1,1 @@
-const BACKEND_URL = "https://myy.fly.dev";
+const BACKEND_URL = "http://20.127.16.187";
