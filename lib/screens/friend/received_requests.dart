@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_state.dart';
-import 'package:ekhata/services/http_service.dart';
 import 'package:ekhata/services/friend_service.dart';
-import 'package:ekhata/env/env.dart' as env;
 
 class ReceivedRequests extends StatefulWidget {
   const ReceivedRequests({Key? key}) : super(key: key);
@@ -20,7 +17,8 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
   String username = "";
   bool isLoading = true;
 
-  void showSnackBar(bool success, String message) {
+  void showSnackBar(bool success,
+      [String message = "Unknown error occurred."]) {
     final snackBar = SnackBar(
         content: Text(message),
         action: SnackBarAction(
@@ -33,21 +31,23 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
   }
 
   void getFriendRequests() async {
-    List response = await FriendService.getFriendRequests();
+    List response = await FriendService.getReceivedFriendRequests();
     if (response[0] == true) {
       setState(() {
         requests = response[1];
       });
-    } else {}
+    } else {
+      showSnackBar(false);
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> acceptRequest(String username) async {
-    final response = await HttpService.postReq(
-        "${env.BACKEND_URL}/acceptrequest/", {"username": username});
-    final data = json.decode(response.body);
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      showSnackBar(data["success"], data["message"]);
+    List response = await FriendService.acceptFriendRequest(username);
+    if (response[0] == true) {
+      showSnackBar(response[0], response[1]);
       setState(() {
         List<Map<String, String?>> temp = [];
         requests.forEach((user) {
@@ -62,22 +62,17 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
         requests = temp;
       });
     } else {
-      final snackBar = SnackBar(
-        content: const Text("Unknown error Occurred."),
-        action: SnackBarAction(
-          label: "Close",
-          onPressed: () {},
-        ),
-        backgroundColor: Colors.red[800],
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      showSnackBar(false);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    FriendService.getFriendRequests();
+    getFriendRequests();
   }
 
   @override

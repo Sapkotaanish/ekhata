@@ -1,0 +1,62 @@
+Date : 2023-02-25 16:02:14
+Directory : /media/anishs/restore/college/minor/ekhata/lib
+Total : 26 files,  2181 codes, 44 comments, 202 blanks, all 2427 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |         26 |      2,181 |         44 |        202 |      2,427 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                      | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                         |         26 |      2,181 |         44 |        202 |      2,427 |
+| . (Files)                                                                                 |          1 |         15 |          0 |          4 |         19 |
+| bloc                                                                                      |          3 |         76 |          3 |         15 |         94 |
+| env                                                                                       |          1 |          1 |          0 |          1 |          2 |
+| model                                                                                     |          1 |          9 |          0 |          2 |         11 |
+| screens                                                                                   |         16 |      1,880 |         39 |        161 |      2,080 |
+| screens (Files)                                                                           |          3 |        335 |          4 |         30 |        369 |
+| screens/friend                                                                            |          5 |        733 |         29 |         46 |        808 |
+| screens/transaction                                                                       |          2 |        344 |          5 |         27 |        376 |
+| screens/user                                                                              |          6 |        468 |          1 |         58 |        527 |
+| screens/user (Files)                                                                      |          3 |        375 |          1 |         35 |        411 |
+| screens/user/bloc                                                                         |          3 |         93 |          0 |         23 |        116 |
+| services                                                                                  |          4 |        200 |          2 |         19 |        221 |
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                  | language | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /media/anishs/restore/college/minor/ekhata/lib/bloc/auth_bloc.dart                        | Dart     |         57 |          1 |          4 |         62 |
+| /media/anishs/restore/college/minor/ekhata/lib/bloc/auth_event.dart                       | Dart     |          5 |          0 |          3 |          8 |
+| /media/anishs/restore/college/minor/ekhata/lib/bloc/auth_state.dart                       | Dart     |         14 |          2 |          8 |         24 |
+| /media/anishs/restore/college/minor/ekhata/lib/env/env.dart                               | Dart     |          1 |          0 |          1 |          2 |
+| /media/anishs/restore/college/minor/ekhata/lib/main.dart                                  | Dart     |         15 |          0 |          4 |         19 |
+| /media/anishs/restore/college/minor/ekhata/lib/model/user.dart                            | Dart     |          9 |          0 |          2 |         11 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/dashboard.dart                     | Dart     |        182 |          0 |         16 |        198 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/friend/friend.dart                 | Dart     |        195 |          1 |         17 |        213 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/friend/friend_view.dart            | Dart     |         88 |          1 |          5 |         94 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/friend/friends_list.dart           | Dart     |        117 |         27 |          7 |        151 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/friend/received_requests.dart      | Dart     |        160 |          0 |          9 |        169 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/friend/sent_requests.dart          | Dart     |        173 |          0 |          8 |        181 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/home.dart                          | Dart     |         62 |          0 |          6 |         68 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/logged_view.dart                   | Dart     |         91 |          4 |          8 |        103 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/transaction/add_transaction.dart   | Dart     |        161 |          2 |         14 |        177 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/transaction/transactions_list.dart | Dart     |        183 |          3 |         13 |        199 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/user/bloc/login_bloc.dart          | Dart     |         36 |          0 |          3 |         39 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/user/bloc/login_event.dart         | Dart     |         34 |          0 |         10 |         44 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/user/bloc/login_state.dart         | Dart     |         23 |          0 |         10 |         33 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/user/login.dart                    | Dart     |        125 |          0 |         13 |        138 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/user/profile.dart                  | Dart     |         71 |          1 |          6 |         78 |
+| /media/anishs/restore/college/minor/ekhata/lib/screens/user/register.dart                 | Dart     |        179 |          0 |         16 |        195 |
+| /media/anishs/restore/college/minor/ekhata/lib/services/auth_service.dart                 | Dart     |         69 |          1 |          4 |         74 |
+| /media/anishs/restore/college/minor/ekhata/lib/services/friend_service.dart               | Dart     |         69 |          0 |          6 |         75 |
+| /media/anishs/restore/college/minor/ekhata/lib/services/http_service.dart                 | Dart     |         38 |          0 |          3 |         41 |
+| /media/anishs/restore/college/minor/ekhata/lib/services/storage_service.dart              | Dart     |         24 |          1 |          6 |         31 |
+| Total                                                                                     |          |      2,181 |         44 |        202 |      2,427 |
++-------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

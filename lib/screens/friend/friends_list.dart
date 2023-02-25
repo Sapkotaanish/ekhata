@@ -27,9 +27,7 @@ class _FriendsListState extends State<FriendsList> {
       if (data["success"] == "true" || data["success"]) {
         setState(() {
           List<Map<String, String?>> temp = [];
-          print(data["data"]);
           data["data"]?.forEach((user) {
-            print(user);
             temp.add({
               "email": user["email"] ?? "",
               "username": user["username"] ?? "",
@@ -39,55 +37,13 @@ class _FriendsListState extends State<FriendsList> {
           friends = temp;
         });
       }
-      print(data);
     } else {
       print("Success false");
     }
-    isLoading = false;
+    setState(() {
+      isLoading = false;
+    });
   }
-
-  // Future<void> unFriend(String username) async {
-  //   final response = await HttpService.postReq(
-  //       "${env.BACKEND_URL}/acceptrequest/", {"username": username});
-  //   final data = json.decode(response.body);
-  //   if (response.statusCode == 200) {
-  //     final data = json.decode(response.body);
-  //     final snackBar = SnackBar(
-  //       content: Text(data["message"]),
-  //       action: SnackBarAction(
-  //         label: "Close",
-  //         onPressed: () {},
-  //       ),
-  //       backgroundColor: ((data["success"] == "true" || data["success"])
-  //           ? Colors.green[800]
-  //           : Colors.red[800]),
-  //     );
-  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  //     setState(() {
-  //       List<Map<String, String?>> temp = [];
-  //       requests.forEach((user) {
-  //         if (user["username"] != username) {
-  //           temp.add({
-  //             "email": user["email"] ?? "",
-  //             "username": user["username"] ?? "",
-  //             "avatar": user["avatar"] ?? ""
-  //           });
-  //         }
-  //       });
-  //       requests = temp;
-  //     });
-  //   } else {
-  //     final snackBar = SnackBar(
-  //       content: const Text("Unknown error Occurred."),
-  //       action: SnackBarAction(
-  //         label: "Close",
-  //         onPressed: () {},
-  //       ),
-  //       backgroundColor: Colors.red[800],
-  //     );
-  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  //   }
-  // }
 
   @override
   void initState() {
@@ -102,14 +58,14 @@ class _FriendsListState extends State<FriendsList> {
         child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           return Center(
               child: isLoading
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : Column(
                       children: (() {
-                      if (friends.length == 0) {
-                        return [Text("No friends found.")];
+                      if (friends.isEmpty) {
+                        return [const Text("No friends found.")];
                       } else {
                         return friends.map((user) {
-                          return Container(
+                          return SizedBox(
                               width: double.maxFinite,
                               child: InkWell(
                                   onTap: () {
@@ -117,7 +73,7 @@ class _FriendsListState extends State<FriendsList> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                TransactionsList(
+                                                ListTransactions(
                                                     username:
                                                         user["username"] ??
                                                             "")));

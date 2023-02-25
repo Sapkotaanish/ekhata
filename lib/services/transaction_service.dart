@@ -2,31 +2,43 @@ import './http_service.dart';
 import 'dart:convert';
 import 'package:ekhata/env/env.dart' as env;
 
-class FriendService {
-  static Future<List> cancelFriendRequest(String username) async {
-    final response = await HttpService.postReq(
-        "${env.BACKEND_URL}/deleterequests/",
-        {"username": username, "sent": true});
+class TransactionService {
+  static Future<List> addTransaction(
+      {required String to_transaction_with,
+      required amount,
+      required transaction_type,
+      required transaction_detail}) async {
+    final response =
+        await HttpService.postReq("${env.BACKEND_URL}/addtransaction/", {
+      "to_transaction_with": to_transaction_with,
+      "transaction_type": transaction_type,
+      "amount": amount,
+      "transaction_detail": transaction_detail
+    });
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data["success"] == true) {
-        List<Map<String, String?>> temp = [];
-        data.forEach((user) {
-          if (user["username"] != username) {
-            temp.add({
-              "email": user["email"] ?? "",
-              "username": user["username"] ?? "",
-              "avatar": user["avatar"] ?? ""
-            });
-          }
-        });
-        return [true, temp];
+        final transaction = data["data"];
+        if (transaction != null) {
+          Map<String, dynamic> temp = {
+            "id": transaction["id"],
+            "transaction_type": transaction["transaction_type"],
+            "remarks": transaction["transaction_detail"],
+            "addedBy": transaction["added_by"],
+            "isVerified": transaction["is_verified"],
+            "dateOfVerification": transaction["date_of_verification"],
+            "dateOfTransaction": transaction["date_of_transaction"],
+            "amount": transaction["amount"],
+          };
+          return [true, temp];
+        } else {
+          return [false, "Unknown error occurred."];
+        }
+      } else {
+        return [false, data["message"]];
       }
-      return [true, data["message"]];
-    } else {
-      print(response.body);
-      return [true];
     }
+    return [false];
   }
 
   static Future<List> getSentFriendRequests() async {

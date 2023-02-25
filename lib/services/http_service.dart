@@ -13,8 +13,9 @@ class HttpService {
     };
     if (withToken) {
       headers["Authorization"] =
-          "Bearer ${await _storageService.read('accessToken')}" ?? "";
+          "Bearer ${await _storageService.read('accessToken')}";
     }
+    print(data);
     return await http.post(Uri.parse(url),
         headers: headers,
         body: json.encode(data),
@@ -31,7 +32,7 @@ class HttpService {
     };
     if (withToken) {
       headers["Authorization"] =
-          "Bearer ${await _storageService.read('accessToken')}" ?? "";
+          "Bearer ${await _storageService.read('accessToken')}";
     }
     print(headers);
     return await http.get(Uri.parse(url), headers: headers);

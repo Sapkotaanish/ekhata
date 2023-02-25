@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_state.dart';
-import 'package:ekhata/services/http_service.dart';
-import 'package:ekhata/env/env.dart' as env;
+import 'package:ekhata/services/friend_service.dart';
 
 class SentRequests extends StatefulWidget {
   const SentRequests({Key? key}) : super(key: key);
@@ -19,77 +18,45 @@ class _SentRequestsState extends State<SentRequests> {
   String username = "";
   bool isLoading = true;
 
+  void showSnackBar(bool success,
+      [String message = "Unknown error occurred."]) {
+    final snackBar = SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: "Close",
+          onPressed: () {},
+        ),
+        backgroundColor:
+            (success = true) ? Colors.green[800] : Colors.red[800]);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   Future<void> getRequests() async {
-    final response =
-        await HttpService.getReq("${env.BACKEND_URL}/sentrequests/");
-    final data = json.decode(response.body);
-    print(data);
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      print(data["success"].runtimeType);
-      if (data["success"] == true) {
-        setState(() {
-          List<Map<String, String?>> temp = [];
-          print(data["data"]);
-          data["data"]?.forEach((user) {
-            print(user);
-            temp.add({
-              "email": user["email"] ?? "",
-              "username": user["username"] ?? "",
-              "avatar": user["avatar"] ?? ""
-            });
-          });
-          requests = temp;
-        });
-      }
-      print(data);
+    List response = await FriendService.getSentFriendRequests();
+    if (response[0] == true) {
+      setState(() {
+        requests = response[1];
+      });
     } else {
-      print("Success false");
+      showSnackBar(false);
     }
-    isLoading = false;
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> cancelRequest(String username) async {
-    final response = await HttpService.postReq(
-        "${env.BACKEND_URL}/deleterequest/",
-        {"username": username, "sent": true});
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final snackBar = SnackBar(
-        content: Text(data["message"]),
-        action: SnackBarAction(
-          label: "Close",
-          onPressed: () {},
-        ),
-        backgroundColor: ((data["success"] == "true" || data["success"])
-            ? Colors.green[800]
-            : Colors.red[800]),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    List response = await FriendService.cancelFriendRequest(username);
+    if (response[0] == true) {
       setState(() {
-        List<Map<String, String?>> temp = [];
-        requests.forEach((user) {
-          if (user["username"] != username) {
-            temp.add({
-              "email": user["email"] ?? "",
-              "username": user["username"] ?? "",
-              "avatar": user["avatar"] ?? ""
-            });
-          }
-        });
-        requests = temp;
+        requests = response[1];
       });
     } else {
-      final snackBar = SnackBar(
-        content: const Text("Unknown error Occurred."),
-        action: SnackBarAction(
-          label: "Close",
-          onPressed: () {},
-        ),
-        backgroundColor: Colors.red[800],
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      showSnackBar(false);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
