@@ -11,6 +11,7 @@ import '../services/storage_service.dart';
 import 'package:ekhata/services/http_service.dart';
 import 'friend/friend_view.dart';
 import 'user/profile.dart';
+import 'search.dart';
 
 class LoggedView extends StatefulWidget {
   const LoggedView({Key? key}) : super(key: key);
@@ -20,6 +21,8 @@ class LoggedView extends StatefulWidget {
 class _LoggedViewState extends State<LoggedView> {
   String avatar = "";
   String email = "";
+  String firstName = "";
+  String lastName = "";
   String username = "...";
   int currentView = 0;
 
@@ -47,6 +50,8 @@ class _LoggedViewState extends State<LoggedView> {
       email = userObj['email'] ?? "";
       username = userObj['username'] ?? "";
       avatar = userObj['avatar'] ?? "";
+      firstName = userObj['firstName'] ?? "";
+      lastName = userObj['lastName'] ?? "";
     });
   }
 
@@ -62,29 +67,41 @@ class _LoggedViewState extends State<LoggedView> {
         create: (context) => AuthBloc(),
         child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(title: Text(getTitle()), actions: [
-              InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Profile()),
-                    );
-                  },
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(avatar),
-                    backgroundColor: Colors.brown.shade800,
-                  ))
-            ]),
+            appBar: AppBar(
+                title: Text(getTitle(), style: TextStyle(color: Colors.black)),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                actions: [
+                  InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Search()),
+                        );
+                      },
+                      child: Padding(
+                          padding: EdgeInsets.only(right: 18.0), child: Icon(Icons.search, color: Colors.black))),
+                  InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Profile()),
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(avatar),
+                        backgroundColor: Colors.brown.shade800,
+                      ))
+                ]),
             body: _widgetOptions[currentView],
+            // body: IndexedStack(children: _widgetOptions, index: currentView),
             bottomNavigationBar: BottomNavigationBar(
               items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.home), label: "Dashboard"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.school), label: "Friends")
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Dashboard"),
+                BottomNavigationBarItem(icon: Icon(Icons.school), label: "Friends")
               ],
               currentIndex: currentView,
-              selectedItemColor: Colors.amber[800],
+              selectedItemColor: Colors.green,
               onTap: (value) {
                 setState(() {
                   currentView = value;

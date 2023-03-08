@@ -36,40 +36,31 @@ class _FriendViewState extends State<FriendView> {
                 children: [
                   TextButton(
                     style: TextButton.styleFrom(
-                      foregroundColor:
-                          activeSection == 0 ? Colors.black : Colors.blue,
+                      foregroundColor: activeSection == 0 ? Colors.black : Colors.blue,
                     ),
                     child: const Text("Friends"),
                     onPressed: () {
-                      _pageController.animateToPage(0,
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.easeIn);
+                      _pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                       print(activeSection);
                     },
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
-                      foregroundColor:
-                          activeSection == 1 ? Colors.black : Colors.blue,
+                      foregroundColor: activeSection == 1 ? Colors.black : Colors.blue,
                     ),
                     child: const Text("Received Requests"),
                     onPressed: () {
-                      _pageController.animateToPage(1,
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.easeIn);
+                      _pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                       print(activeSection);
                     },
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
-                      foregroundColor:
-                          activeSection == 2 ? Colors.black : Colors.blue,
+                      foregroundColor: activeSection == 2 ? Colors.black : Colors.blue,
                     ),
                     child: const Text("Sent Requests"),
                     onPressed: () {
-                      _pageController.animateToPage(2,
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.easeIn);
+                      _pageController.animateToPage(2, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                       print("gotothis");
                     },
                   ),

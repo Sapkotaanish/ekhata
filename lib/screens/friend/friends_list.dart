@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_state.dart';
 import 'package:ekhata/services/http_service.dart';
+import 'package:ekhata/services/friend_service.dart';
 import 'package:ekhata/env/env.dart' as env;
 
 class FriendsList extends StatefulWidget {
@@ -19,6 +20,19 @@ class _FriendsListState extends State<FriendsList> {
   String avatar = "";
   String username = "";
   bool isLoading = true;
+
+  void showSnackBar(bool success,
+      [String message = "Unknown error occurred."]) {
+    final snackBar = SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: "Close",
+          onPressed: () {},
+        ),
+        backgroundColor:
+            (success = true) ? Colors.green[800] : Colors.red[800]);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   Future<void> getFriends() async {
     final response = await HttpService.getReq("${env.BACKEND_URL}/friends/");

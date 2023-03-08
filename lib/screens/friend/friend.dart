@@ -34,22 +34,19 @@ class _FriendState extends State<Friend> {
     getUser();
   }
 
-  void showSnackBar(bool success,
-      [String message = "Unknown error occurred."]) {
+  void showSnackBar(bool success, [String message = "Unknown error occurred."]) {
     final snackBar = SnackBar(
         content: Text(message),
         action: SnackBarAction(
           label: "Close",
           onPressed: () {},
         ),
-        backgroundColor:
-            (success = true) ? Colors.green[800] : Colors.red[800]);
+        backgroundColor: (success = true) ? Colors.green[800] : Colors.red[800]);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Future<void> getUser() async {
-    final response = await HttpService.getReq(
-        "${env.BACKEND_URL}/profile/$username".replaceAll('#', '%23'));
+    final response = await HttpService.getReq("${env.BACKEND_URL}/profile/$username".replaceAll('#', '%23'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data["success"] == true) {
@@ -81,6 +78,7 @@ class _FriendState extends State<Friend> {
         isLoading = false;
       });
     }
+    getUser();
   }
 
   Future<void> cancelRequest() async {
@@ -95,6 +93,7 @@ class _FriendState extends State<Friend> {
         isLoading = false;
       });
     }
+    getUser();
   }
 
   Future<void> unfriend() async {
@@ -111,6 +110,7 @@ class _FriendState extends State<Friend> {
     setState(() {
       isLoading = false;
     });
+    getUser();
   }
 
   Future<void> addFriend() async {
@@ -118,7 +118,7 @@ class _FriendState extends State<Friend> {
       isLoading = true;
     });
     try {
-      List response = await FriendService.removeFriend(username);
+      List response = await FriendService.sendFriendRequest(username);
       print(response);
       showSnackBar(response[0], response[1]);
     } catch (id) {
@@ -127,14 +127,15 @@ class _FriendState extends State<Friend> {
     setState(() {
       isLoading = true;
     });
+    getUser();
   }
 
-  Future<void> removeFriend() async {
+  Future<void> unFriend() async {
     setState(() {
       isLoading = true;
     });
     try {
-      List response = await FriendService.removeFriend(username);
+      List response = await FriendService.unFriend(username);
       print(response);
       showSnackBar(response[0], response[1]);
     } catch (id) {
@@ -143,9 +144,25 @@ class _FriendState extends State<Friend> {
     setState(() {
       isLoading = false;
     });
+    getUser();
   }
 
-  Future<void> acceptRequest() async {}
+  Future<void> acceptRequest() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      List response = await FriendService.acceptFriendRequest(username);
+      print(response);
+      showSnackBar(response[0], response[1]);
+    } catch (id) {
+      showSnackBar(false);
+    }
+    setState(() {
+      isLoading = false;
+    });
+    getUser();
+  }
 
   Widget friendsButton() {
     if (relation == "N") {
@@ -168,7 +185,7 @@ class _FriendState extends State<Friend> {
               acceptRequest();
             }),
         ElevatedButton(
-            child: Text("Accept Request"),
+            child: Text("delete Request"),
             onPressed: () {
               deleteRequest();
             }),
@@ -177,7 +194,7 @@ class _FriendState extends State<Friend> {
       return ElevatedButton(
           child: Text("Unfriend"),
           onPressed: () {
-            removeFriend();
+            unFriend();
           });
     }
   }
@@ -196,7 +213,7 @@ class _FriendState extends State<Friend> {
                           SizedBox(height: 20),
                           CircleAvatar(
                               // foregroundImage: NetworkImage(avatar ?? ""),
-                              child: Text(username[0].toUpperCase() ?? "U"),
+                              child: Text(username[0].toUpperCase()),
                               radius: 50),
                           SizedBox(height: 20),
                           Text(email),

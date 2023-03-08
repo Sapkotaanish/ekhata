@@ -40,8 +40,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             }
             ;
             String username = result['username'] ?? "";
-            String userString = jsonEncode(
-                {"email": email, "avatar": avatar, "username": username});
+            String lastName = result['last_name'] ?? "";
+            String firstName = result['first_name'] ?? "";
+            String userString = jsonEncode({
+              "email": email,
+              "avatar": avatar,
+              "username": username,
+              "firstName": firstName,
+              "lastName": lastName
+            });
 
             await storageService.write('user', userString);
             // final user = await _storageService.read('user');

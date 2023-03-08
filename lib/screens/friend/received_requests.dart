@@ -69,6 +69,21 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
     });
   }
 
+  Future<void> cancelRequest(String uname) async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      List response = await FriendService.deleteFriendRequest(uname, false);
+      showSnackBar(response[0], response[1]);
+    } catch (id) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+    getFriendRequests();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -108,7 +123,7 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
                                             CircleAvatar(
                                                 backgroundColor: Colors.red,
                                                 child: Text(user["username"]?[0]
-                                                        ?.toUpperCase() ??
+                                                        .toUpperCase() ??
                                                     ""),
                                                 foregroundImage: NetworkImage(
                                                     user["avatar"] ?? "")),
@@ -152,7 +167,8 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
                                                 icon: const Icon(Icons.close),
                                                 color: Colors.red,
                                                 onPressed: () {
-                                                  print("deny req");
+                                                  cancelRequest(
+                                                      user["username"] ?? "");
                                                 },
                                               ),
                                             ]),

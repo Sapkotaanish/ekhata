@@ -101,6 +101,7 @@ class FriendService {
     final response = await HttpService.postReq(
         "${env.BACKEND_URL}/deleterequest/",
         {"username": username, "sent": sent});
+    print(response.body);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return [data["success"], data["message"]];
@@ -109,9 +110,9 @@ class FriendService {
     }
   }
 
-  static Future<List> removeFriend(String username) async {
+  static Future<List> unFriend(String username) async {
     final response = await HttpService.postReq(
-        "${env.BACKEND_URL}/removefriend/", {"username": username});
+        "${env.BACKEND_URL}/unfriend/", {"username": username});
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return [data["success"], data["message"]];

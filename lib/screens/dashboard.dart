@@ -1,15 +1,11 @@
-import 'package:ekhata/screens/friend/received_requests.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:ekhata/env/env.dart' as env;
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_state.dart';
 import '../services/storage_service.dart';
-import 'package:ekhata/services/http_service.dart';
-import 'friend/friend.dart';
-import 'user/profile.dart';
+import '../services/dashboard.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -19,9 +15,15 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   String avatar = "";
   String email = "";
+  String firstName = "";
+  String lastName = "";
   String username = "...";
+  String toTake = "";
+  String toGive = "";
 
-  Future<void> getEmail() async {
+  List<Map<String, dynamic>> transactions = [];
+
+  Future<void> getUser() async {
     final StorageService _storageService = StorageService();
     final user = await _storageService.read('user');
     final userObj = jsonDecode(user ?? "");
@@ -30,13 +32,48 @@ class _DashboardState extends State<Dashboard> {
       email = userObj['email'] ?? "";
       username = userObj['username'] ?? "";
       avatar = userObj['avatar'] ?? "";
+      firstName = userObj['firstName'] ?? "";
+      lastName = userObj['lastName'] ?? "";
     });
+  }
+
+  Future<void> getData() async {
+    List response = await DashboardService.getDashboard();
+    if (response[0] == true) {
+      List<dynamic> trans = response[1];
+      List<Map<String, dynamic>> temp = [];
+      double take = 0;
+      double give = 0;
+      trans.forEach((transaction) {
+        if (transaction["amount"] > 0) {
+          take += transaction["amount"];
+        } else {
+          give += transaction["amount"];
+        }
+        temp.add({
+          "email": transaction["email"] ?? "",
+          "username": transaction["username"] ?? "",
+          "avatar": transaction["avatar"] ?? "",
+          "amount": transaction["amount"] ?? "",
+          "firstName": transaction["first_name"] ?? "",
+          "lastName": transaction["last_name"] ?? "",
+        });
+      });
+      setState(() {
+        toTake = take.toString();
+        toGive = give.abs().toString();
+        transactions = temp;
+      });
+    } else {
+      // showSnackBar(false);
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    getEmail();
+    getData();
+    getUser();
   }
 
   @override
@@ -45,153 +82,157 @@ class _DashboardState extends State<Dashboard> {
         create: (context) => AuthBloc(),
         child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           return Column(children: [
-            Text("Hello $username"),
-            _SearchField(),
+            SizedBox(height: 20),
+            Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                  color: Colors.black,
+                  width: 2.0, // This would be the width of the underline
+                ))),
+                child: Text("My Stats",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ))),
+            SizedBox(height: 20),
+            Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                    padding: EdgeInsets.all(14),
+                    child: Card(
+                        // color: Colors.green,
+                        child: Container(
+                            // padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                            child: Column(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(15),
+                            color: Colors.green,
+                            child: Row(
+                              children: [
+                                Icon(Icons.south_west_outlined,
+                                    color: Colors.white),
+                                Text("   To Receive",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 15)),
+                              ],
+                            )),
+                        SizedBox(width: 8),
+                        Column(
+                          children: [
+                            SizedBox(height: 15),
+                            Text("Rs. $toTake",
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700)),
+                            SizedBox(height: 15),
+                          ],
+                        )
+                      ],
+                    )))),
+                Padding(
+                    padding: EdgeInsets.all(14),
+                    child: Card(
+                        // color: Colors.green,
+                        child: Container(
+                            // padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                            child: Column(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+                            color: Colors.red,
+                            child: Row(
+                              children: [
+                                Icon(Icons.north_east, color: Colors.white),
+                                Text("   To Give",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 15)),
+                              ],
+                            )),
+                        SizedBox(width: 8),
+                        Column(
+                          children: [
+                            SizedBox(height: 15),
+                            Text("Rs. $toTake",
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700)),
+                            SizedBox(height: 15),
+                          ],
+                        )
+                      ],
+                    ))))
+              ],
+            ),
+            SizedBox(height: 30),
+            Container(
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                color: Colors.black,
+                width: 2.0, // This would be the width of the underline
+              ))),
+              child: Text("Top Transactions",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            ),
+            SizedBox(height: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: transactions.map((transaction) {
+                return Padding(
+                    padding: EdgeInsets.fromLTRB(14, 10, 14, 10),
+                    child: Card(
+                        // color: Colors.red[200],
+                        child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        transaction["firstName"] +
+                                            " " +
+                                            transaction["lastName"],
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700)),
+                                    Text(transaction["username"],
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                        )),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                        "Rs. ${transaction["amount"].abs().toString()}",
+                                        style: TextStyle(
+                                            color: transaction["amount"] < 0
+                                                ? Colors.red
+                                                : Colors.green,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600)),
+                                    Icon(
+                                        transaction["amount"] < 0
+                                            ? Icons.arrow_downward
+                                            : Icons.arrow_upward,
+                                        color: transaction["amount"] < 0
+                                            ? Colors.red
+                                            : Colors.green)
+                                  ],
+                                )
+                              ],
+                            ))));
+              }).toList(),
+            ),
           ]);
         }));
-  }
-}
-
-class _SearchField extends StatefulWidget {
-  @override
-  _SearchFieldState createState() => _SearchFieldState();
-}
-
-class _SearchFieldState extends State<_SearchField> {
-  String? userName = null;
-  List<Map<String, String?>> options = [];
-  final _debouncer = Debouncer(milliseconds: 500);
-  final _textEditingController = TextEditingController();
-  bool isLoading = false;
-
-  void onSelected(String username) {
-    print(username);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Friend(username)),
-    );
-  }
-
-  void _onTextChange(String text) {
-    setState(() {
-      userName = text;
-    });
-
-    if (text.length > 0) {
-      print(text.length);
-      _debouncer.run(() {
-        getUser(text);
-      });
-    }
-  }
-
-  Future<void> getUser(String userName) async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      final response = await HttpService.postReq(
-          "${env.BACKEND_URL}/search/", {"username": userName});
-      final data = json.decode(response.body);
-      print(data);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        String success = data['success'] ? "true" : "false";
-        setState(() {
-          if (success == "true") {
-            options = [];
-            data?["data"].forEach((user) => {
-                  options.add({
-                    "username": user["username"] ?? "",
-                    "email": user["email"] ?? "",
-                    "avatar": user["avatar"],
-                  })
-                });
-          } else {
-            options = [];
-          }
-        });
-      } else {
-        print("response not 200");
-        setState(() {
-          options = [];
-        });
-      }
-      setState(() {
-        isLoading = false;
-      });
-    } catch (id) {
-      print(id);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      TextField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            labelText: "Enter username",
-          ),
-          onChanged: _onTextChange,
-          controller: _textEditingController,
-          onSubmitted: (String value) {
-            print(value);
-          }),
-      !isLoading
-          ? Material(
-              child: SizedBox(
-                  child: SingleChildScrollView(
-                      child: Column(
-              children: options.map((opt) {
-                return InkWell(
-                    onTap: () {
-                      onSelected(opt["username"] ?? "");
-                    },
-                    child: Container(
-                        padding: const EdgeInsets.only(right: 60),
-                        child: Card(
-                            margin: const EdgeInsets.only(),
-                            color: Colors.transparent,
-                            child: Container(
-                                width: double.maxFinite,
-                                padding: const EdgeInsets.all(10),
-                                child: Row(children: [
-                                  CircleAvatar(
-                                      backgroundColor: Colors.red,
-                                      foregroundImage:
-                                          NetworkImage(opt["avatar"] ?? ""),
-                                      child: Text(
-                                          opt["username"]?[0]?.toUpperCase() ??
-                                              "")),
-                                  SizedBox(width: 5),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(opt["username"] ?? ""),
-                                      Text(opt["email"] ?? ""),
-                                    ],
-                                  ),
-                                ])))));
-              }).toList(),
-            ))))
-          : const CircularProgressIndicator(),
-    ]);
-  }
-}
-
-class Debouncer {
-  final int milliseconds;
-  VoidCallback? action;
-  Timer? _timer;
-
-  Debouncer({required this.milliseconds});
-
-  run(VoidCallback action) {
-    if (null != _timer) {
-      _timer?.cancel();
-    }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }

@@ -5,11 +5,8 @@ class AddTransaction extends StatefulWidget {
   final String username;
   final Function(Map<String, dynamic>) appendTransaction;
 
-  const AddTransaction(
-      {Key? key, required this.username, required this.appendTransaction})
-      : super(key: key);
-  AddTransactionState createState() =>
-      AddTransactionState(username, appendTransaction);
+  const AddTransaction({Key? key, required this.username, required this.appendTransaction}) : super(key: key);
+  AddTransactionState createState() => AddTransactionState(username, appendTransaction);
 }
 
 class AddTransactionState extends State<AddTransaction> {
@@ -45,21 +42,17 @@ class AddTransactionState extends State<AddTransaction> {
   void submitTransaction() {
     if (_formKey.currentState!.validate()) {
       addTransaction();
-      // context.read<LoginBloc>().add(
-      //     LoginRequestEvent(_emailController.text, _passwordController.text));
     }
   }
 
-  void showSnackBar(bool success,
-      [String message = "Unknown error occurred."]) {
+  void showSnackBar(bool success, [String message = "Unknown error occurred."]) {
     final snackBar = SnackBar(
         content: Text(message),
         action: SnackBarAction(
           label: "Close",
           onPressed: () {},
         ),
-        backgroundColor:
-            (success = true) ? Colors.green[800] : Colors.red[800]);
+        backgroundColor: (success = true) ? Colors.green[800] : Colors.red[800]);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -75,17 +68,19 @@ class AddTransactionState extends State<AddTransaction> {
         amount: amt,
         transaction_detail: remarks,
       );
+      print(response);
 
       if (response[0] == true) {
         setState(() {
           appendTransaction(response[1]);
         });
       } else {
-        showSnackBar(false, response[1]);
+        showSnackBar(false, response[1][0]);
       }
       setState(() {
         isLoading = false;
       });
+      Navigator.pop(context);
     } catch (err) {
       print(err);
     }
@@ -142,9 +137,7 @@ class AddTransactionState extends State<AddTransaction> {
                               isDebit = val ?? false;
                             });
                           })),
-                  ElevatedButton(
-                      onPressed: isLoading ? null : submitTransaction,
-                      child: const Text("Submit")),
+                  ElevatedButton(onPressed: isLoading ? null : submitTransaction, child: const Text("Submit")),
                   ElevatedButton(
                       onPressed: () {
                         print("close it");

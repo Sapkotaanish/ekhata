@@ -31,33 +31,48 @@ class _HomeState extends State<Home> {
           return (() {
             if (state is AuthLoadingState) {
               return Scaffold(
-                  appBar: AppBar(title: const Text("Loading...")),
-                  body: const Center(child: CircularProgressIndicator()));
+                  appBar: AppBar(title: const Text("IOUMate")),
+                  body: Center(
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Image.asset(
+                      "images/logo.png",
+                      height: 200.0,
+                      width: 200.0,
+                    ),
+                    CircularProgressIndicator()
+                  ])));
             } else if (state is AuthUnAuthenticatedState) {
               return Scaffold(
-                  appBar: AppBar(title: Text(showLogin ? "Login" : "Register")),
-                  body: Column(children: [
-                    Container(
-                      height: 300,
-                      child: showLogin ? const Login() : Register(),
-                    ),
-                    Container(
-                      color: Colors.blue[200],
-                      height: 80,
-                      width: 200,
-                      child: InkWell(
-                          onTap: () {
-                            toggleForm();
-                          },
-                          child: Center(
-                              child: Text(
-                            showLogin
-                                ? "Don't have an account? Register Here."
-                                : "Already got an account? Login Here.",
-                            textAlign: TextAlign.center,
-                          ))),
-                    )
-                  ]));
+                  // appBar: AppBar(title: Text(showLogin ? "Login" : "Register")),
+                  body: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Center(
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                            Container(
+                              height: 420,
+                              child: showLogin ? const Login() : Register(),
+                            ),
+                            Container(
+                              child: InkWell(
+                                  onTap: () {
+                                    toggleForm();
+                                  },
+                                  child: Center(
+                                      child: Text(
+                                    showLogin
+                                        ? "Don't have an account? Register Here."
+                                        : "Already got an account? Login Here.",
+                                    textAlign: TextAlign.center,
+                                    // ignore: prefer_const_constructors
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                    ),
+                                  ))),
+                            )
+                          ]))));
             } else {
               return const LoggedView();
             }

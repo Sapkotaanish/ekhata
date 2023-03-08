@@ -82,27 +82,27 @@ class _SentRequestsState extends State<SentRequests> {
                           return Container(
                               width: double.maxFinite,
                               child: Card(
-                                  shape: RoundedRectangleBorder(
+                                  shape: const RoundedRectangleBorder(
                                     side: BorderSide(
                                       color: Colors.black,
                                     ),
                                   ),
-                                  margin: EdgeInsets.only(),
+                                  margin: const EdgeInsets.only(),
                                   color: Colors.blue[50],
                                   child: Container(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       child: Column(children: [
-                                        SizedBox(height: 15),
+                                        const SizedBox(height: 15),
                                         Row(
                                           children: [
                                             CircleAvatar(
                                                 backgroundColor: Colors.red,
                                                 child: Text(user["username"]?[0]
-                                                        ?.toUpperCase() ??
+                                                        .toUpperCase() ??
                                                     ""),
                                                 foregroundImage: NetworkImage(
                                                     user["avatar"] ?? "")),
-                                            SizedBox(width: 5),
+                                            const SizedBox(width: 5),
                                             Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,

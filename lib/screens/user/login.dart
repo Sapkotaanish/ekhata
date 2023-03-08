@@ -7,54 +7,50 @@ import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_event.dart';
 
 class Login extends StatefulWidget {
-	const Login({super.key});
+  const Login({super.key});
 
-	_LoginState createState() => _LoginState();
+  _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-	@override
-	void initState() {
-		super.initState();
-	}
+  @override
+  void initState() {
+    super.initState();
+  }
 
-	@override
-	Widget build(BuildContext context) {
-		return Scaffold(
-			body: MultiBlocProvider(
-				providers:[
-					BlocProvider<LoginBloc>(
-						create: (BuildContext context) => LoginBloc(),
-					)
-				],
-				child: BlocConsumer<LoginBloc, LoginState>( 
-					listener: (context, state){
-						if (state is LoginResponseState) {
-							final snackBar = SnackBar(
-							content: Text(state.message),
-							action: SnackBarAction(
-								label: "Close",
-								onPressed: () {},
-							),
-							backgroundColor: (state.success == "true"
-								? Colors.green[800]
-								: Colors.red[800]),
-							);
-							ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              context.read<AuthBloc>().add(AuthRequestEvent());
-						}
-					},
-					builder: (context, state) {
-						if (state is RequestLoadingState) {
-							return const Center(child: CircularProgressIndicator());
-						} else {
-							return _LoginForm();
-						}
-					}
-				)
-			)
-		);
-	}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: MultiBlocProvider(
+            providers: [
+          BlocProvider<LoginBloc>(
+            create: (BuildContext context) => LoginBloc(),
+          )
+        ],
+            child:
+                BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
+              if (state is LoginResponseState) {
+                final snackBar = SnackBar(
+                  content: Text(state.message),
+                  action: SnackBarAction(
+                    label: "Close",
+                    onPressed: () {},
+                  ),
+                  backgroundColor: (state.success == "true"
+                      ? Colors.green[800]
+                      : Colors.red[800]),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                context.read<AuthBloc>().add(AuthRequestEvent());
+              }
+            }, builder: (context, state) {
+              if (state is RequestLoadingState) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return _LoginForm();
+              }
+            })));
+  }
 }
 
 class _LoginForm extends StatefulWidget {
@@ -102,10 +98,25 @@ class LoginFormState extends State<_LoginForm> {
   Widget build(BuildContext context) => Form(
       key: _formKey,
       child: Column(children: [
+        Image.asset(
+          "images/logo.png",
+          height: 100.0,
+          width: 100.0,
+        ),
+        SizedBox(height: 40),
         TextFormField(
+          decoration: InputDecoration(
+              // contentPadding: const EdgeInsets.only(left: 40.0, right: 20.0),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(70.0),
+              ),
+              hintText: 'Email',
+              prefixIcon: const Icon(
+                Icons.mail,
+              )),
           controller: _emailController,
           onChanged: this._onEmailChange,
-          decoration: InputDecoration(hintText: 'Email'),
+          // decoration: InputDecoration(hintText: 'Email'),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "Email is required";
@@ -118,20 +129,35 @@ class LoginFormState extends State<_LoginForm> {
             ;
           },
         ),
+        SizedBox(height: 20),
         TextFormField(
           controller: _passwordController,
           onChanged: this._onPasswordChange,
-          decoration: InputDecoration(hintText: 'Password'),
+          decoration: InputDecoration(
+              // contentPadding: const EdgeInsets.only(left: 40.0, right: 20.0),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(70.0),
+              ),
+              hintText: 'Password',
+              prefixIcon: const Icon(
+                Icons.lock,
+              )),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "Password is required";
             }
           },
         ),
-        ElevatedButton(
-            child: const Text('Submit'),
-            onPressed: () {
-              _submitLogin(context);
-            }),
+        SizedBox(height: 20),
+        Container(
+          width: double.infinity,
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(20), shape: StadiumBorder()),
+              child: const Text('Submit'),
+              onPressed: () {
+                _submitLogin(context);
+              }),
+        )
       ]));
 }

@@ -6,7 +6,6 @@ import 'package:ekhata/bloc/auth_event.dart';
 import 'package:ekhata/bloc/auth_state.dart';
 import 'package:ekhata/services/storage_service.dart';
 import '../home.dart';
-import '../friend/received_requests.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -59,17 +58,6 @@ class _ProfileState extends State<Profile> {
                   },
                   child: const Text('Logout'),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    print("pressed");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ReceivedRequests()),
-                    );
-                  },
-                  child: const Text('Received Requests'),
-                )
               ])));
           // return Text(email);
         }));

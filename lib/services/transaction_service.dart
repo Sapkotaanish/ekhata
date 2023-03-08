@@ -29,6 +29,7 @@ class TransactionService {
             "dateOfVerification": transaction["date_of_verification"],
             "dateOfTransaction": transaction["date_of_transaction"],
             "amount": transaction["amount"],
+            "addedBy": transaction["added_by"],
           };
           return [true, temp];
         } else {
