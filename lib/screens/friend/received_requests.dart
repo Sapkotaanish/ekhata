@@ -17,16 +17,14 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
   String username = "";
   bool isLoading = true;
 
-  void showSnackBar(bool success,
-      [String message = "Unknown error occurred."]) {
+  void showSnackBar(bool success, [String message = "Unknown error occurred."]) {
     final snackBar = SnackBar(
         content: Text(message),
         action: SnackBarAction(
           label: "Close",
           onPressed: () {},
         ),
-        backgroundColor:
-            (success = true) ? Colors.green[800] : Colors.red[800]);
+        backgroundColor: (success = true) ? Colors.green[800] : Colors.red[800]);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -52,11 +50,8 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
         List<Map<String, String?>> temp = [];
         requests.forEach((user) {
           if (user["username"] != username) {
-            temp.add({
-              "email": user["email"] ?? "",
-              "username": user["username"] ?? "",
-              "avatar": user["avatar"] ?? ""
-            });
+            temp.add(
+                {"email": user["email"] ?? "", "username": user["username"] ?? "", "avatar": user["avatar"] ?? ""});
           }
         });
         requests = temp;
@@ -101,7 +96,7 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
                   : Column(
                       children: (() {
                       if (requests.length == 0) {
-                        return [Text("No any friend requests in pending")];
+                        return [Padding(padding: EdgeInsets.all(20), child: Text("No any friend requests in pending"))];
                       } else {
                         return requests.map((user) {
                           return Container(
@@ -122,19 +117,13 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
                                           children: [
                                             CircleAvatar(
                                                 backgroundColor: Colors.red,
-                                                child: Text(user["username"]?[0]
-                                                        .toUpperCase() ??
-                                                    ""),
-                                                foregroundImage: NetworkImage(
-                                                    user["avatar"] ?? "")),
+                                                child: Text(user["username"]?[0].toUpperCase() ?? ""),
+                                                foregroundImage: NetworkImage(user["avatar"] ?? "")),
                                             SizedBox(width: 5),
-                                            Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(user["username"] ?? ""),
-                                                  Text(user["email"] ?? ""),
-                                                ])
+                                            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                              Text(user["username"] ?? ""),
+                                              Text(user["email"] ?? ""),
+                                            ])
                                           ],
                                         ),
                                         SizedBox(height: 15),
@@ -146,10 +135,8 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
                                           color: Colors.grey[400],
                                         ),
                                         Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               IconButton(
                                                 iconSize: 32,
@@ -157,8 +144,7 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
                                                 color: Colors.green,
                                                 onPressed: () {
                                                   print("accept req");
-                                                  acceptRequest(
-                                                      user["username"] ?? "");
+                                                  acceptRequest(user["username"] ?? "");
                                                 },
                                               ),
                                               SizedBox(width: 20),
@@ -167,8 +153,7 @@ class _ReceivedRequestsState extends State<ReceivedRequests> {
                                                 icon: const Icon(Icons.close),
                                                 color: Colors.red,
                                                 onPressed: () {
-                                                  cancelRequest(
-                                                      user["username"] ?? "");
+                                                  cancelRequest(user["username"] ?? "");
                                                 },
                                               ),
                                             ]),

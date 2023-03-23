@@ -18,16 +18,14 @@ class _SentRequestsState extends State<SentRequests> {
   String username = "";
   bool isLoading = true;
 
-  void showSnackBar(bool success,
-      [String message = "Unknown error occurred."]) {
+  void showSnackBar(bool success, [String message = "Unknown error occurred."]) {
     final snackBar = SnackBar(
         content: Text(message),
         action: SnackBarAction(
           label: "Close",
           onPressed: () {},
         ),
-        backgroundColor:
-            (success = true) ? Colors.green[800] : Colors.red[800]);
+        backgroundColor: (success = true) ? Colors.green[800] : Colors.red[800]);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -46,7 +44,7 @@ class _SentRequestsState extends State<SentRequests> {
   }
 
   Future<void> cancelRequest(String username) async {
-    List response = await FriendService.cancelFriendRequest(username);
+    List response = await FriendService.deleteFriendRequest(username, true);
     if (response[0] == true) {
       setState(() {
         requests = response[1];
@@ -76,7 +74,7 @@ class _SentRequestsState extends State<SentRequests> {
                   : Column(
                       children: (() {
                       if (requests.length == 0) {
-                        return [Text("No any sent friend requests in pending")];
+                        return [Padding(padding: EdgeInsets.all(20), child: Text("No any friend requests in pending"))];
                       } else {
                         return requests.map((user) {
                           return Container(
@@ -97,19 +95,13 @@ class _SentRequestsState extends State<SentRequests> {
                                           children: [
                                             CircleAvatar(
                                                 backgroundColor: Colors.red,
-                                                child: Text(user["username"]?[0]
-                                                        .toUpperCase() ??
-                                                    ""),
-                                                foregroundImage: NetworkImage(
-                                                    user["avatar"] ?? "")),
+                                                child: Text(user["username"]?[0].toUpperCase() ?? ""),
+                                                foregroundImage: NetworkImage(user["avatar"] ?? "")),
                                             const SizedBox(width: 5),
-                                            Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(user["username"] ?? ""),
-                                                  Text(user["email"] ?? ""),
-                                                ])
+                                            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                              Text(user["username"] ?? ""),
+                                              Text(user["email"] ?? ""),
+                                            ])
                                           ],
                                         ),
                                         SizedBox(height: 15),
@@ -121,10 +113,8 @@ class _SentRequestsState extends State<SentRequests> {
                                           color: Colors.grey[400],
                                         ),
                                         Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               SizedBox(width: 20),
                                               IconButton(
@@ -133,8 +123,7 @@ class _SentRequestsState extends State<SentRequests> {
                                                 color: Colors.red,
                                                 onPressed: () {
                                                   print("deny req");
-                                                  cancelRequest(
-                                                      user["username"] ?? "");
+                                                  cancelRequest(user["username"] ?? "");
                                                 },
                                               ),
                                             ]),

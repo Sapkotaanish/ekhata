@@ -2,20 +2,21 @@ import './http_service.dart';
 import 'dart:convert';
 import 'package:ekhata/env/env.dart' as env;
 
-class TransactionService {
-  static Future<List> addTransaction(
-      {required String to_transaction_with,
-      required amount,
-      required transaction_type,
-      required transaction_detail}) async {
-    final response = await HttpService.postReq("${env.BACKEND_URL}/addexpense/", {
-      "to_transaction_with": to_transaction_with,
-      "transaction_type": transaction_type,
+class TrackerService {
+  static Future<List> addRecord(
+      {required String category, required amount, required type, required description}) async {
+    String endpoint = 'addexpense/';
+    if (type == "Income") {
+      endpoint = "addincome/";
+    }
+    final response = await HttpService.postReq("${env.BACKEND_URL}/${endpoint}", {
       "amount": amount,
-      "transaction_detail": transaction_detail
+      "description": description,
+      "category": category,
     });
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
+      print(response.body);
       if (data["success"] == true) {
         final transaction = data["data"];
         if (transaction != null) {

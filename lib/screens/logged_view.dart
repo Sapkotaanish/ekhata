@@ -10,7 +10,9 @@ import 'package:ekhata/bloc/auth_state.dart';
 import '../services/storage_service.dart';
 import 'package:ekhata/services/http_service.dart';
 import 'friend/friend_view.dart';
+import 'transaction/transaction.dart';
 import 'user/profile.dart';
+import 'expense_tracker/tracker.dart';
 import 'search.dart';
 
 class LoggedView extends StatefulWidget {
@@ -29,6 +31,8 @@ class _LoggedViewState extends State<LoggedView> {
   List<Widget> _widgetOptions = [
     Dashboard(),
     FriendView(),
+    Transaction(),
+    Tracker(),
   ];
 
   String getTitle() {
@@ -36,6 +40,8 @@ class _LoggedViewState extends State<LoggedView> {
       return "Dashboard";
     } else if (currentView == 1) {
       return "Friends";
+    } else if (currentView == 2) {
+      return "Transactions";
     } else {
       return "Ekhata";
     }
@@ -67,50 +73,23 @@ class _LoggedViewState extends State<LoggedView> {
         create: (context) => AuthBloc(),
         child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(
-                title: Text(getTitle(), style: TextStyle(color: Colors.black)),
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                actions: [
-                  InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Search()),
-                        );
-                      },
-                      child: Padding(
-                          padding: EdgeInsets.only(right: 18.0), child: Icon(Icons.search, color: Colors.black))),
-                  InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Profile()),
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(avatar),
-                        backgroundColor: Colors.brown.shade800,
-                      ))
-                ]),
             body: _widgetOptions[currentView],
             // body: IndexedStack(children: _widgetOptions, index: currentView),
             bottomNavigationBar: BottomNavigationBar(
+              unselectedItemColor: Colors.black,
+              type: BottomNavigationBarType.fixed,
               items: [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Dashboard"),
-                BottomNavigationBarItem(icon: Icon(Icons.school), label: "Friends")
+                BottomNavigationBarItem(icon: Icon(Icons.query_stats_outlined), label: "Dashboard"),
+                BottomNavigationBarItem(icon: Icon(Icons.people), label: "Friends"),
+                BottomNavigationBarItem(icon: Icon(Icons.attach_money_outlined), label: "Transactions"),
+                BottomNavigationBarItem(icon: Icon(Icons.wallet_outlined), label: "Tracker")
               ],
               currentIndex: currentView,
-              selectedItemColor: Colors.green,
+              selectedItemColor: Theme.of(context).primaryColor,
               onTap: (value) {
                 setState(() {
                   currentView = value;
                 });
-                // if (value == 1) {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => FriendView()));
-                // }
-                print(value);
               },
             ),
           );

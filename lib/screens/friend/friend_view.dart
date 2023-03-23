@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'package:ekhata/screens/friend/received_requests.dart';
 import 'package:ekhata/screens/friend/friends_list.dart';
 import 'package:ekhata/screens/friend/sent_requests.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ekhata/bloc/auth_bloc.dart';
-import 'package:ekhata/bloc/auth_event.dart';
 import 'package:ekhata/bloc/auth_state.dart';
-import 'package:ekhata/services/storage_service.dart';
+import '../search.dart';
 
 class FriendView extends StatefulWidget {
   const FriendView({Key? key}) : super(key: key);
@@ -29,56 +27,55 @@ class _FriendViewState extends State<FriendView> {
     return BlocProvider(
         create: (context) => AuthBloc(),
         child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-          return Column(children: [
-            Container(
-              color: Colors.green[100],
-              child: Row(
+          return DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                  title: Text("Friends", style: TextStyle(color: Theme.of(context).primaryColor)),
+                  shape: Border(bottom: BorderSide(color: Colors.grey)),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  bottom: TabBar(
+                    labelColor: Theme.of(context).primaryColor,
+                    unselectedLabelColor: Colors.black,
+                    tabs: const [
+                      FittedBox(
+                        child: Text("Friends"),
+                      ),
+                      FittedBox(
+                        child: Text(
+                          "Received\nRequests",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      FittedBox(
+                        child: Text(
+                          "Sent\nRequests",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Search()),
+                          );
+                        },
+                        child: const Padding(
+                            padding: EdgeInsets.only(right: 18.0), child: Icon(Icons.search, color: Colors.black))),
+                  ]),
+              body: const TabBarView(
                 children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: activeSection == 0 ? Colors.black : Colors.blue,
-                    ),
-                    child: const Text("Friends"),
-                    onPressed: () {
-                      _pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-                      print(activeSection);
-                    },
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: activeSection == 1 ? Colors.black : Colors.blue,
-                    ),
-                    child: const Text("Received Requests"),
-                    onPressed: () {
-                      _pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-                      print(activeSection);
-                    },
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: activeSection == 2 ? Colors.black : Colors.blue,
-                    ),
-                    child: const Text("Sent Requests"),
-                    onPressed: () {
-                      _pageController.animateToPage(2, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-                      print("gotothis");
-                    },
-                  ),
+                  FriendsList(),
+                  ReceivedRequests(),
+                  SentRequests(),
                 ],
               ),
             ),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                children: [FriendsList(), ReceivedRequests(), SentRequests()],
-                onPageChanged: (value) {
-                  setState(() {
-                    activeSection = value;
-                  });
-                },
-              ),
-            )
-          ]);
+          );
         }));
   }
 }

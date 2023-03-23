@@ -6,6 +6,9 @@ import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_state.dart';
 import '../services/storage_service.dart';
 import '../services/dashboard.dart';
+import 'user/profile.dart';
+import 'search.dart';
+import './transaction/transactions_list.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -27,7 +30,6 @@ class _DashboardState extends State<Dashboard> {
     final StorageService _storageService = StorageService();
     final user = await _storageService.read('user');
     final userObj = jsonDecode(user ?? "");
-    print(userObj);
     setState(() {
       email = userObj['email'] ?? "";
       username = userObj['username'] ?? "";
@@ -81,158 +83,168 @@ class _DashboardState extends State<Dashboard> {
     return BlocProvider(
         create: (context) => AuthBloc(),
         child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-          return Column(children: [
-            SizedBox(height: 20),
-            Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                  color: Colors.black,
-                  width: 2.0, // This would be the width of the underline
-                ))),
-                child: Text("My Stats",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ))),
-            SizedBox(height: 20),
-            Flex(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                    padding: EdgeInsets.all(14),
-                    child: Card(
-                        // color: Colors.green,
-                        child: Container(
-                            // padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                            child: Column(
-                      children: [
-                        Container(
-                            padding: EdgeInsets.all(15),
-                            color: Colors.green,
-                            child: Row(
-                              children: [
-                                Icon(Icons.south_west_outlined,
-                                    color: Colors.white),
-                                Text("   To Receive",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 15)),
-                              ],
-                            )),
-                        SizedBox(width: 8),
-                        Column(
-                          children: [
-                            SizedBox(height: 15),
-                            Text("Rs. $toTake",
-                                style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700)),
-                            SizedBox(height: 15),
-                          ],
-                        )
-                      ],
-                    )))),
-                Padding(
-                    padding: EdgeInsets.all(14),
-                    child: Card(
-                        // color: Colors.green,
-                        child: Container(
-                            // padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                            child: Column(
-                      children: [
-                        Container(
-                            padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
-                            color: Colors.red,
-                            child: Row(
-                              children: [
-                                Icon(Icons.north_east, color: Colors.white),
-                                Text("   To Give",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 15)),
-                              ],
-                            )),
-                        SizedBox(width: 8),
-                        Column(
-                          children: [
-                            SizedBox(height: 15),
-                            Text("Rs. $toTake",
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700)),
-                            SizedBox(height: 15),
-                          ],
-                        )
-                      ],
-                    ))))
-              ],
-            ),
-            SizedBox(height: 30),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                color: Colors.black,
-                width: 2.0, // This would be the width of the underline
-              ))),
-              child: Text("Top Transactions",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            ),
-            SizedBox(height: 20),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: transactions.map((transaction) {
-                return Padding(
-                    padding: EdgeInsets.fromLTRB(14, 10, 14, 10),
-                    child: Card(
-                        // color: Colors.red[200],
+          return Scaffold(
+              appBar: AppBar(
+                  title: Text("Dashboard", style: TextStyle(color: Theme.of(context).primaryColor)),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  actions: [
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Search()),
+                          );
+                        },
                         child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            padding: EdgeInsets.only(right: 18.0), child: Icon(Icons.search, color: Colors.black))),
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Profile()),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(avatar),
+                          backgroundColor: Colors.brown.shade800,
+                        ))
+                  ]),
+              body: Column(children: [
+                SizedBox(height: 20),
+                Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                      color: Colors.black,
+                      width: 2.0, // This would be the width of the underline
+                    ))),
+                    child: Text("My Stats",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ))),
+                SizedBox(height: 20),
+                Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.all(14),
+                        child: Card(
+                            // color: Colors.green,
+                            child: Container(
+                                // padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                child: Column(
+                          children: [
+                            Container(
+                                padding: EdgeInsets.all(15),
+                                color: Colors.green,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.south_west_outlined, color: Colors.white),
+                                    Text("   To Receive", style: TextStyle(color: Colors.white, fontSize: 15)),
+                                  ],
+                                )),
+                            SizedBox(width: 8),
+                            Column(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        transaction["firstName"] +
-                                            " " +
-                                            transaction["lastName"],
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700)),
-                                    Text(transaction["username"],
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                        )),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                        "Rs. ${transaction["amount"].abs().toString()}",
-                                        style: TextStyle(
-                                            color: transaction["amount"] < 0
-                                                ? Colors.red
-                                                : Colors.green,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600)),
-                                    Icon(
-                                        transaction["amount"] < 0
-                                            ? Icons.arrow_downward
-                                            : Icons.arrow_upward,
-                                        color: transaction["amount"] < 0
-                                            ? Colors.red
-                                            : Colors.green)
-                                  ],
-                                )
+                                SizedBox(height: 15),
+                                Text("Rs. $toTake",
+                                    style: TextStyle(color: Colors.green, fontSize: 20, fontWeight: FontWeight.w700)),
+                                SizedBox(height: 15),
                               ],
-                            ))));
-              }).toList(),
-            ),
-          ]);
+                            )
+                          ],
+                        )))),
+                    Padding(
+                        padding: EdgeInsets.all(14),
+                        child: Card(
+                            // color: Colors.green,
+                            child: Container(
+                                // padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                child: Column(
+                          children: [
+                            Container(
+                                padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+                                color: Colors.red,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.north_east, color: Colors.white),
+                                    Text("   To Give", style: TextStyle(color: Colors.white, fontSize: 15)),
+                                  ],
+                                )),
+                            SizedBox(width: 8),
+                            Column(
+                              children: [
+                                SizedBox(height: 15),
+                                Text("Rs. $toGive",
+                                    style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.w700)),
+                                SizedBox(height: 15),
+                              ],
+                            )
+                          ],
+                        ))))
+                  ],
+                ),
+                SizedBox(height: 30),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                    color: Colors.black,
+                    width: 2.0, // This would be the width of the underline
+                  ))),
+                  child: Text("Top Transactions", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                ),
+                SizedBox(height: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: transactions.map((transaction) {
+                    return Padding(
+                        padding: EdgeInsets.fromLTRB(14, 10, 14, 10),
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ListTransactions(username: transaction["username"])),
+                              );
+                            },
+                            child: Card(
+                                // color: Colors.red[200],
+                                child: Padding(
+                                    padding: EdgeInsets.all(20),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(transaction["firstName"] + " " + transaction["lastName"],
+                                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                                            Text(transaction["username"],
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                )),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text("Rs. ${transaction["amount"].abs().toString()}",
+                                                style: TextStyle(
+                                                    color: transaction["amount"] < 0 ? Colors.red : Colors.green,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600)),
+                                            Icon(transaction["amount"] < 0 ? Icons.arrow_downward : Icons.arrow_upward,
+                                                color: transaction["amount"] < 0 ? Colors.red : Colors.green)
+                                          ],
+                                        )
+                                      ],
+                                    )))));
+                  }).toList(),
+                ),
+              ]));
         }));
   }
 }

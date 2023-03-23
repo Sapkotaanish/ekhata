@@ -7,6 +7,8 @@ import 'package:ekhata/bloc/auth_state.dart';
 import 'package:ekhata/services/http_service.dart';
 import 'package:ekhata/services/friend_service.dart';
 import 'package:ekhata/env/env.dart' as env;
+import './user.dart';
+import './friend.dart';
 
 class FriendsList extends StatefulWidget {
   const FriendsList({Key? key}) : super(key: key);
@@ -21,16 +23,14 @@ class _FriendsListState extends State<FriendsList> {
   String username = "";
   bool isLoading = true;
 
-  void showSnackBar(bool success,
-      [String message = "Unknown error occurred."]) {
+  void showSnackBar(bool success, [String message = "Unknown error occurred."]) {
     final snackBar = SnackBar(
         content: Text(message),
         action: SnackBarAction(
           label: "Close",
           onPressed: () {},
         ),
-        backgroundColor:
-            (success = true) ? Colors.green[800] : Colors.red[800]);
+        backgroundColor: (success = true) ? Colors.green[800] : Colors.red[800]);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -45,7 +45,9 @@ class _FriendsListState extends State<FriendsList> {
             temp.add({
               "email": user["email"] ?? "",
               "username": user["username"] ?? "",
-              "avatar": user["avatar"] ?? ""
+              "avatar": user["avatar"] ?? "",
+              "firstName": user["first_name"],
+              "lastName": user["last_name"]
             });
           });
           friends = temp;
@@ -84,78 +86,10 @@ class _FriendsListState extends State<FriendsList> {
                               child: InkWell(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ListTransactions(
-                                                    username:
-                                                        user["username"] ??
-                                                            "")));
+                                        context, MaterialPageRoute(builder: (context) => Friend(user["username"]!)));
                                   },
-                                  child: Card(
-                                      shape: const RoundedRectangleBorder(
-                                        side: BorderSide(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      margin: const EdgeInsets.only(),
-                                      color: Colors.blue[50],
-                                      child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(children: [
-                                            SizedBox(height: 15),
-                                            Row(
-                                              children: [
-                                                CircleAvatar(
-                                                    backgroundColor: Colors.red,
-                                                    child: Text(user["username"]
-                                                                ?[0]
-                                                            .toUpperCase() ??
-                                                        ""),
-                                                    foregroundImage:
-                                                        NetworkImage(
-                                                            user["avatar"] ??
-                                                                "")),
-                                                SizedBox(width: 5),
-                                                Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(user["username"] ??
-                                                          ""),
-                                                      Text(user["email"] ?? ""),
-                                                    ])
-                                              ],
-                                            ),
-                                            //   SizedBox(height: 15),
-                                            //   Divider(
-                                            //     height: 10,
-                                            //     thickness: 2,
-                                            //     indent: 0,
-                                            //     endIndent: 0,
-                                            //     color: Colors.grey[400],
-                                            //   ),
-                                            //   Row(
-                                            //       crossAxisAlignment:
-                                            //           CrossAxisAlignment.center,
-                                            //       mainAxisAlignment:
-                                            //           MainAxisAlignment.center,
-                                            //       children: [
-                                            //         SizedBox(width: 20),
-                                            //         IconButton(
-                                            //           iconSize: 32,
-                                            //           icon: const Icon(Icons.close),
-                                            //           color: Colors.red,
-                                            //           onPressed: () {
-                                            //             print("delete req");
-                                            //             deleteRequest(
-                                            //                 user["username"] ?? "");
-                                            //           },
-                                            //         ),
-                                            //       ]),
-                                            // ]))
-                                          ])))));
+                                  child: User(user["username"]!, user["firstName"]!, user["lastName"]!, user["email"]!,
+                                      user["avatar"]!)));
                         }).toList();
                       }
                     }())));

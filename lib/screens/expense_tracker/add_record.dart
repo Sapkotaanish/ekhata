@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:ekhata/services/transaction_service.dart';
+import 'package:ekhata/services/tracker_service.dart';
 
-class AddTransaction extends StatefulWidget {
+class AddRecord extends StatefulWidget {
   final String username;
   final Function(Map<String, dynamic>) appendTransaction;
 
-  const AddTransaction({Key? key, required this.username, required this.appendTransaction}) : super(key: key);
-  AddTransactionState createState() => AddTransactionState(username, appendTransaction);
+  const AddRecord({Key? key, required this.username, required this.appendTransaction}) : super(key: key);
+  AddRecordState createState() => AddRecordState(username, appendTransaction);
 }
 
-class AddTransactionState extends State<AddTransaction> {
+class AddRecordState extends State<AddRecord> {
   final Function(Map<String, dynamic>) appendTransaction;
   List<Map<String, String?>> transactions = [];
 
@@ -19,12 +19,17 @@ class AddTransactionState extends State<AddTransaction> {
 
   String amount = "";
   String remarks = "";
-  bool isDebit = true;
+  bool isDebit = false;
   final String username;
   bool isLoading = false;
   bool showForm = false;
 
-  AddTransactionState(this.username, this.appendTransaction);
+  final List<String> incomeCategories = ["Salary", "Vettako Paisa"];
+  String incomeCategory = "Salary";
+  final List<String> expenseCategories = ["Food", "Utility"];
+  String expenseCategory = "Food";
+
+  AddRecordState(this.username, this.appendTransaction);
 
   void _onRemarksChange(String text) {
     setState(() {
@@ -62,11 +67,11 @@ class AddTransactionState extends State<AddTransaction> {
     });
     try {
       double amt = double.parse(amount);
-      final response = await TransactionService.addTransaction(
-        to_transaction_with: username,
-        transaction_type: isDebit ? "D" : "C",
+      final response = await TrackerService.addRecord(
+        category: isDebit ? expenseCategory : incomeCategory,
         amount: amt,
-        transaction_detail: remarks,
+        description: remarks,
+        type: isDebit ? "Expense" : "Income",
       );
       print(response);
 
@@ -77,22 +82,22 @@ class AddTransactionState extends State<AddTransaction> {
       } else {
         showSnackBar(false, response[1][0]);
       }
-      setState(() {
-        isLoading = false;
-      });
       Navigator.pop(context);
     } catch (err) {
       print(err);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-        scrollable: true,
-        title: const Text("New Transaction"),
-        content: Padding(
-            padding: const EdgeInsets.all(6.5),
+    return Scaffold(
+        // scrollable: true,
+        appBar: AppBar(title: Text("New Record")),
+        body: Padding(
+            padding: const EdgeInsets.all(25),
             child: Form(
                 key: _formKey,
                 child: Column(children: [
@@ -118,9 +123,9 @@ class AddTransactionState extends State<AddTransaction> {
                     },
                   ),
                   ListTile(
-                      title: const Text("Debit"),
+                      title: const Text("Income"),
                       leading: Radio<bool>(
-                          value: true,
+                          value: false,
                           groupValue: isDebit,
                           onChanged: (val) {
                             setState(() {
@@ -128,15 +133,59 @@ class AddTransactionState extends State<AddTransaction> {
                             });
                           })),
                   ListTile(
-                      title: const Text("Credit"),
+                      title: const Text("Expense"),
                       leading: Radio<bool>(
-                          value: false,
+                          value: true,
                           groupValue: isDebit,
                           onChanged: (val) {
                             setState(() {
                               isDebit = val ?? false;
                             });
                           })),
+                  Row(children: [
+                    const Text("Category: "),
+                    isDebit
+                        ? DropdownButton<String>(
+                            value: expenseCategory,
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.deepPurple),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            onChanged: (String? value) {
+                              setState(() {
+                                expenseCategory = value!;
+                              });
+                            },
+                            items: expenseCategories.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          )
+                        : DropdownButton<String>(
+                            value: incomeCategory,
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.deepPurple),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            onChanged: (String? value) {
+                              setState(() {
+                                incomeCategory = value!;
+                              });
+                            },
+                            items: incomeCategories.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          )
+                  ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
