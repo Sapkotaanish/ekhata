@@ -7,7 +7,7 @@ import 'package:ekhata/bloc/auth_state.dart';
 import 'package:ekhata/services/http_service.dart';
 import 'package:ekhata/env/env.dart' as env;
 import 'add_record.dart';
-import './filter_transaction.dart';
+import 'filter_record.dart';
 import 'package:intl/intl.dart';
 
 class Tracker extends StatefulWidget {
@@ -33,7 +33,6 @@ class _TrackerState extends State<Tracker> {
   String email = "";
   String myUsername = "";
   String avatar = "";
-  final String username = "kushal#810028";
   bool isLoading = true;
   bool formOpened = false;
   bool isScrolled = false;
@@ -42,10 +41,12 @@ class _TrackerState extends State<Tracker> {
 
   _TrackerState();
 
-  void appendTransaction(Map<String, dynamic> newTransaction) {
+  void appendTransaction() {
     setState(() {
-      transactions = [newTransaction, ...transactions];
+      isLoading = true;
+      // transactions = [newTransaction, ...transactions];
     });
+    getTransactions();
   }
 
   void filterTransaction(Map filters) {
@@ -124,12 +125,9 @@ class _TrackerState extends State<Tracker> {
     });
   }
 
-  void showForm() {
-    print("show form");
-    // showDialog(builder: )
-    setState(() {
-      formOpened = true;
-    });
+  String utf8convert(String text) {
+    List<int> bytes = text.toString().codeUnits;
+    return utf8.decode(bytes);
   }
 
   @override
@@ -140,7 +138,8 @@ class _TrackerState extends State<Tracker> {
           return Scaffold(
               appBar: AppBar(
                 iconTheme: IconThemeData(color: Colors.black),
-                title: Text(isScrolled ? username : "", style: TextStyle(color: Colors.white, fontSize: 18)),
+                title: Text(isScrolled ? "Personal Expense Tracker" : "",
+                    style: TextStyle(color: Colors.white, fontSize: 18)),
                 backgroundColor: isScrolled ? Theme.of(context).primaryColor : Colors.white,
                 elevation: 0,
               ),
@@ -152,7 +151,7 @@ class _TrackerState extends State<Tracker> {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AddRecord(username: username, appendTransaction: appendTransaction);
+                                return AddRecord(appendTransaction: appendTransaction);
                               });
                         },
                         child: const Icon(Icons.add))),
@@ -161,7 +160,7 @@ class _TrackerState extends State<Tracker> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return FilterTransaction(filters: filters, filterTransaction: filterTransaction);
+                          return FilterRecord(filters: filters, filterTransaction: filterTransaction);
                         });
                   },
                   label: Text("Filter"),
@@ -234,10 +233,12 @@ class _TrackerState extends State<Tracker> {
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         FittedBox(
-                                                          child: Text(transaction["description"] ?? "",
+                                                            child: Container(
+                                                          width: MediaQuery.of(context).size.width - 150,
+                                                          child: Text(utf8convert(transaction["description"]),
                                                               style: const TextStyle(
                                                                   fontSize: 18.0, fontWeight: FontWeight.w500)),
-                                                        ),
+                                                        )),
                                                         const SizedBox(height: 10),
                                                         Text(DateFormat("h:mm a").format(transactionTime),
                                                             style: const TextStyle(
@@ -249,10 +250,10 @@ class _TrackerState extends State<Tracker> {
                                                                 color: Color(0xaa4c57cf),
                                                                 fontWeight: FontWeight.w500,
                                                                 fontSize: 12)),
+                                                        SizedBox(height: 5),
+                                                        Text(transaction["category"],
+                                                            style: TextStyle(color: Colors.grey[600])),
                                                         SizedBox(height: 10),
-                                                        // Text("Added By: ", style: TextStyle(color: Colors.grey[500])),
-                                                        // Text(transaction["addedBy"] == email ? myUsername : username,
-                                                        //     style: TextStyle(color: Colors.grey[500])),
                                                       ]),
                                                   Column(children: [
                                                     Row(
@@ -265,29 +266,9 @@ class _TrackerState extends State<Tracker> {
                                                                     ? Colors.green
                                                                     : Colors.red)),
                                                         SizedBox(width: 4),
-                                                        // transaction["liney"] == email
-                                                        //     ? const Icon(Icons.arrow_circle_up_outlined,
-                                                        //         color: Colors.green, size: 26.0)
-                                                        //     : const Icon(Icons.arrow_circle_down_outlined,
-                                                        //         color: Colors.red, size: 26.0),
                                                       ],
                                                     ),
                                                     SizedBox(height: 6),
-                                                    // (() {
-                                                    //   if (transaction["isVerified"]) {
-                                                    //     return const Text("Verified");
-                                                    //   } else {
-                                                    //     if (transaction["addedBy"] == email) {
-                                                    //       return const Text("Pending");
-                                                    //     } else {
-                                                    //       return ElevatedButton(
-                                                    //           onPressed: () {
-                                                    //             // verifyTransaction(transaction["id"]);
-                                                    //           },
-                                                    //           child: const Text("Verify"));
-                                                    //     }
-                                                    //   }
-                                                    // }()),
                                                   ]),
                                                 ]),
                                               ]))))
@@ -302,15 +283,12 @@ class _TrackerState extends State<Tracker> {
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                                   child: Column(
                                     children: [
-                                      Text("Transaction History",
+                                      Text("Personal Expense\nTracker",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.w700,
                                               color: Theme.of(context).primaryColor)),
-                                      Text(username,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(color: Theme.of(context).primaryColor))
                                     ],
                                   )));
 

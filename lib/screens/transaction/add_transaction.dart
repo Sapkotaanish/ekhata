@@ -88,67 +88,93 @@ class AddTransactionState extends State<AddTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-        scrollable: true,
-        title: const Text("New Transaction"),
-        content: Padding(
-            padding: const EdgeInsets.all(6.5),
-            child: Form(
-                key: _formKey,
-                child: Column(children: [
-                  TextFormField(
-                    controller: _amountController,
-                    keyboardType: TextInputType.number,
-                    onChanged: this._onAmountChange,
-                    decoration: InputDecoration(hintText: 'Amount'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Amount is required";
-                      }
-                    },
-                  ),
-                  TextFormField(
-                    controller: _remarksController,
-                    onChanged: this._onRemarksChange,
-                    decoration: InputDecoration(hintText: 'Remarks'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Remarks is required";
-                      }
-                    },
-                  ),
-                  ListTile(
-                      title: const Text("Debit"),
-                      leading: Radio<bool>(
-                          value: true,
-                          groupValue: isDebit,
-                          onChanged: (val) {
-                            setState(() {
-                              isDebit = val ?? true;
-                            });
-                          })),
-                  ListTile(
-                      title: const Text("Credit"),
-                      leading: Radio<bool>(
-                          value: false,
-                          groupValue: isDebit,
-                          onChanged: (val) {
-                            setState(() {
-                              isDebit = val ?? false;
-                            });
-                          })),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(onPressed: isLoading ? null : submitTransaction, child: const Text("Submit")),
-                      ElevatedButton(
-                          onPressed: () {
-                            print("close it");
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Cancel"))
-                    ],
-                  )
-                ]))));
+    return Scaffold(
+        appBar: AppBar(title: Text("New Transaction")),
+        body: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(25),
+                child: Form(
+                    key: _formKey,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      TextFormField(
+                        controller: _amountController,
+                        keyboardType: TextInputType.number,
+                        onChanged: this._onAmountChange,
+                        decoration: InputDecoration(
+                          labelText: 'Amount',
+                          labelStyle: TextStyle(color: Theme.of(context).primaryColor),
+                          focusedBorder: OutlineInputBorder(),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Amount is required";
+                          }
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        controller: _remarksController,
+                        onChanged: this._onRemarksChange,
+                        decoration: InputDecoration(
+                          labelText: 'Remarks',
+                          labelStyle: TextStyle(color: Theme.of(context).primaryColor),
+                          focusedBorder: OutlineInputBorder(),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Remarks is required";
+                          }
+                        },
+                      ),
+                      SizedBox(height: 30),
+                      Text("Record Type: ", style: TextStyle(fontSize: 16)),
+                      ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 1),
+                          title: const Text("Debit"),
+                          leading: Radio<bool>(
+                              value: true,
+                              groupValue: isDebit,
+                              onChanged: (val) {
+                                setState(() {
+                                  isDebit = val ?? true;
+                                });
+                              })),
+                      ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 1),
+                          title: const Text("Credit"),
+                          leading: Radio<bool>(
+                              value: false,
+                              groupValue: isDebit,
+                              onChanged: (val) {
+                                setState(() {
+                                  isDebit = val ?? false;
+                                });
+                              })),
+                      SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              print("close it");
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancel"),
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(25, 15, 25, 15))),
+                          ),
+                          ElevatedButton(
+                              onPressed: isLoading ? null : submitTransaction,
+                              style: ButtonStyle(
+                                  padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(25, 15, 25, 15))),
+                              child: const Text("Submit"))
+                        ],
+                      )
+                    ])))));
   }
 }

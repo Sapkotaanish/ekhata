@@ -69,9 +69,9 @@ class _FriendViewState extends State<FriendView> {
                   ]),
               body: const TabBarView(
                 children: [
-                  FriendsList(),
-                  ReceivedRequests(),
-                  SentRequests(),
+                  SingleChildScrollView(child: FriendsList()),
+                  SingleChildScrollView(child: ReceivedRequests()),
+                  SingleChildScrollView(child: SentRequests()),
                 ],
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import './chart.dart';
 import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_state.dart';
 import '../services/storage_service.dart';
@@ -110,7 +111,8 @@ class _DashboardState extends State<Dashboard> {
                           backgroundColor: Colors.brown.shade800,
                         ))
                   ]),
-              body: Column(children: [
+              body: SingleChildScrollView(
+                  child: Column(children: [
                 SizedBox(height: 20),
                 Container(
                     decoration: BoxDecoration(
@@ -127,82 +129,80 @@ class _DashboardState extends State<Dashboard> {
                 SizedBox(height: 20),
                 Flex(
                   direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Padding(
                         padding: EdgeInsets.all(14),
                         child: Card(
-                            // color: Colors.green,
                             child: Container(
-                                // padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                                 child: Column(
                           children: [
                             Container(
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 color: Colors.green,
                                 child: Row(
-                                  children: [
+                                  children: const [
                                     Icon(Icons.south_west_outlined, color: Colors.white),
-                                    Text("   To Receive", style: TextStyle(color: Colors.white, fontSize: 15)),
+                                    Text("  To Receive", style: TextStyle(color: Colors.white, fontSize: 15)),
                                   ],
                                 )),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Column(
                               children: [
-                                SizedBox(height: 15),
+                                const SizedBox(height: 15),
                                 Text("Rs. $toTake",
-                                    style: TextStyle(color: Colors.green, fontSize: 20, fontWeight: FontWeight.w700)),
-                                SizedBox(height: 15),
+                                    style: const TextStyle(
+                                        color: Colors.green, fontSize: 20, fontWeight: FontWeight.w700)),
+                                const SizedBox(height: 15),
                               ],
                             )
                           ],
                         )))),
                     Padding(
-                        padding: EdgeInsets.all(14),
+                        padding: const EdgeInsets.all(14),
                         child: Card(
-                            // color: Colors.green,
                             child: Container(
-                                // padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                                 child: Column(
                           children: [
                             Container(
-                                padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+                                padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
                                 color: Colors.red,
                                 child: Row(
-                                  children: [
+                                  children: const [
                                     Icon(Icons.north_east, color: Colors.white),
                                     Text("   To Give", style: TextStyle(color: Colors.white, fontSize: 15)),
                                   ],
                                 )),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Column(
                               children: [
-                                SizedBox(height: 15),
+                                const SizedBox(height: 15),
                                 Text("Rs. $toGive",
-                                    style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.w700)),
-                                SizedBox(height: 15),
+                                    style:
+                                        const TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.w700)),
+                                const SizedBox(height: 15),
                               ],
                             )
                           ],
                         ))))
                   ],
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
                     color: Colors.black,
-                    width: 2.0, // This would be the width of the underline
+                    width: 2.0,
                   ))),
-                  child: Text("Top Transactions", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                  child: const Text("Latest Transactions", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: transactions.map((transaction) {
                     return Padding(
-                        padding: EdgeInsets.fromLTRB(14, 10, 14, 10),
+                        padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
                         child: GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -212,9 +212,8 @@ class _DashboardState extends State<Dashboard> {
                               );
                             },
                             child: Card(
-                                // color: Colors.red[200],
                                 child: Padding(
-                                    padding: EdgeInsets.all(20),
+                                    padding: const EdgeInsets.all(20),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -222,9 +221,9 @@ class _DashboardState extends State<Dashboard> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(transaction["firstName"] + " " + transaction["lastName"],
-                                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                                             Text(transaction["username"],
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 12,
                                                 )),
                                           ],
@@ -244,7 +243,9 @@ class _DashboardState extends State<Dashboard> {
                                     )))));
                   }).toList(),
                 ),
-              ]));
+                const SizedBox(height: 30),
+                Chart(),
+              ])));
         }));
   }
 }

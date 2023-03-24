@@ -88,13 +88,16 @@ class FilterTransactionState extends State<FilterTransaction> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton(onPressed: submitFilter, child: const Text("Submit")),
                       ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                          ),
                           onPressed: () {
                             print("close it");
                             Navigator.pop(context);
                           },
-                          child: const Text("Cancel"))
+                          child: const Text("Cancel")),
+                      ElevatedButton(onPressed: submitFilter, child: const Text("Submit")),
                     ],
                   )
                 ])));

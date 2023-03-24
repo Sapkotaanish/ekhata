@@ -14,4 +14,16 @@ class DashboardService {
       return [false, "Error"];
     }
   }
+
+  static Future<List> getChartData() async {
+    final response = await HttpService.getReq("${env.BACKEND_URL}/allincomeexpensesbyday/");
+    print(response.body);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return [data["success"], data["data"]];
+    } else {
+      // print(response.body);
+      return [false, "Error"];
+    }
+  }
 }

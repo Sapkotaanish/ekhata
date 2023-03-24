@@ -76,23 +76,25 @@ class _FriendsListState extends State<FriendsList> {
               child: isLoading
                   ? const CircularProgressIndicator()
                   : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: (() {
-                      if (friends.isEmpty) {
-                        return [const Text("No friends found.")];
-                      } else {
-                        return friends.map((user) {
-                          return SizedBox(
-                              width: double.maxFinite,
-                              child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context, MaterialPageRoute(builder: (context) => Friend(user["username"]!)));
-                                  },
-                                  child: User(user["username"]!, user["firstName"]!, user["lastName"]!, user["email"]!,
-                                      user["avatar"]!)));
-                        }).toList();
-                      }
-                    }())));
+                        if (friends.isEmpty) {
+                          return [const Text("No friends found.")];
+                        } else {
+                          return friends.map((user) {
+                            return SizedBox(
+                                width: double.maxFinite,
+                                child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context, MaterialPageRoute(builder: (context) => Friend(user["username"]!)));
+                                    },
+                                    child: User(user["username"]!, user["firstName"]!, user["lastName"]!,
+                                        user["email"]!, user["avatar"]!)));
+                          }).toList();
+                        }
+                      }())));
         }));
   }
 }

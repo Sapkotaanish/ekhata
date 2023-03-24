@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/home.dart';
 
 void main() {
@@ -26,6 +27,11 @@ class EkhataApp extends StatelessWidget {
     return MaterialApp(
       title: "Ekhata",
       theme: ThemeData(
+          fontFamily: GoogleFonts.poppins().fontFamily,
+          // textTheme: GoogleFonts.latoTextTheme(
+          //   Theme.of(context).textTheme,
+          // ),
+          // fontFamily: "Lato",
           primarySwatch: MaterialColor(0xff4c57cf, color),
           scaffoldBackgroundColor: Colors.grey[100],
           // textTheme: Theme.of(context).textTheme.apply(
@@ -35,18 +41,14 @@ class EkhataApp extends StatelessWidget {
           inputDecorationTheme: InputDecorationTheme(
               // prefixIconColor: Colors.white,
               // suffixIconColor: Colors.white,
-              hintStyle: TextStyle(
-                  color: Colors.grey[400],
-                  fontWeight: FontWeight.w200,
-                  fontSize: 12.0),
+              hintStyle: TextStyle(color: Colors.grey[400], fontWeight: FontWeight.w200, fontSize: 12.0),
               enabledBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey, width: 0.5),
               ),
               border: const OutlineInputBorder(),
               labelStyle: new TextStyle(color: Colors.green),
               focusedBorder: UnderlineInputBorder(
-                borderSide:
-                    BorderSide(style: BorderStyle.solid, color: Colors.green),
+                borderSide: BorderSide(style: BorderStyle.solid, color: Colors.green),
               ))),
       home: const Home(),
     );

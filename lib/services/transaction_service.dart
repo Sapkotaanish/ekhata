@@ -8,7 +8,7 @@ class TransactionService {
       required amount,
       required transaction_type,
       required transaction_detail}) async {
-    final response = await HttpService.postReq("${env.BACKEND_URL}/addexpense/", {
+    final response = await HttpService.postReq("${env.BACKEND_URL}/addtransaction/", {
       "to_transaction_with": to_transaction_with,
       "transaction_type": transaction_type,
       "amount": amount,

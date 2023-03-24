@@ -27,8 +27,7 @@ class _LoginState extends State<Login> {
             create: (BuildContext context) => LoginBloc(),
           )
         ],
-            child:
-                BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
+            child: BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
               if (state is LoginResponseState) {
                 final snackBar = SnackBar(
                   content: Text(state.message),
@@ -36,9 +35,7 @@ class _LoginState extends State<Login> {
                     label: "Close",
                     onPressed: () {},
                   ),
-                  backgroundColor: (state.success == "true"
-                      ? Colors.green[800]
-                      : Colors.red[800]),
+                  backgroundColor: (state.success == "true" ? Colors.green[800] : Colors.red[800]),
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 context.read<AuthBloc>().add(AuthRequestEvent());
@@ -59,8 +56,10 @@ class _LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<_LoginForm> {
-  String email = "sapkotaanish000@gmail.com";
-  String password = "aaa";
+  // String email = "sapkotaanish000@gmail.com";
+  // String password = "aaa";
+  String email = "";
+  String password = "";
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -70,15 +69,13 @@ class LoginFormState extends State<_LoginForm> {
   void initState() {
     super.initState();
     _emailController.value = _emailController.value.copyWith(text: email);
-    _passwordController.value =
-        _passwordController.value.copyWith(text: password);
+    _passwordController.value = _passwordController.value.copyWith(text: password);
   }
 
   void _submitLogin(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       _emailController.value = _emailController.value.copyWith(text: email);
-      context.read<LoginBloc>().add(
-          LoginRequestEvent(_emailController.text, _passwordController.text));
+      context.read<LoginBloc>().add(LoginRequestEvent(_emailController.text, _passwordController.text));
     }
   }
 
@@ -121,8 +118,7 @@ class LoginFormState extends State<_LoginForm> {
             if (value == null || value.isEmpty) {
               return "Email is required";
             }
-            final emailRegExp =
-                RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+            final emailRegExp = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
             if (!emailRegExp.hasMatch(value)) {
               return "Invalid Email";
             }
@@ -131,10 +127,10 @@ class LoginFormState extends State<_LoginForm> {
         ),
         SizedBox(height: 20),
         TextFormField(
+          obscureText: true,
           controller: _passwordController,
           onChanged: this._onPasswordChange,
           decoration: InputDecoration(
-              // contentPadding: const EdgeInsets.only(left: 40.0, right: 20.0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(70.0),
               ),
@@ -152,8 +148,7 @@ class LoginFormState extends State<_LoginForm> {
         Container(
           width: double.infinity,
           child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(20), shape: StadiumBorder()),
+              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20), shape: StadiumBorder()),
               child: const Text('Submit'),
               onPressed: () {
                 _submitLogin(context);

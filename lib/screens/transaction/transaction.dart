@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ekhata/bloc/auth_bloc.dart';
 import 'package:ekhata/bloc/auth_state.dart';
 import 'package:ekhata/services/http_service.dart';
-import 'package:ekhata/services/friend_service.dart';
 import 'package:ekhata/env/env.dart' as env;
 import '../friend/user.dart';
 
@@ -92,52 +91,46 @@ class _TransactionState extends State<Transaction> {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
               ),
-              body: Center(
-                  child: isLoading
-                      ? const CircularProgressIndicator()
-                      : Column(
-                          children: (() {
-                          if (friends.isEmpty) {
-                            return [const Text("No friends found.")];
-                          } else {
-                            return [
-                              Padding(
-                                padding: EdgeInsets.all(15),
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      // focusedBorder: OutlineInputBorder(
-                                      //   borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                                      //   borderRadius: BorderRadius.circular(30),
-                                      // ),
-                                      // enabledBorder: OutlineInputBorder(
-                                      //   borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 0.8),
-                                      //   borderRadius: BorderRadius.circular(30),
-                                      // ),
-                                      prefixIcon: Icon(Icons.search),
-                                      // prefixIconColor: Theme.of(context).primaryColor,
-                                      hintText: "Filter by Name/Username/Email"),
-                                  onChanged: (value) {
-                                    filterFriends(value);
-                                  },
-                                ),
-                              ),
-                              ...filteredFriends.map((user) {
-                                return SizedBox(
-                                    width: double.maxFinite,
-                                    child: InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ListTransactions(username: user["username"] ?? "")));
-                                        },
-                                        child: User(user["username"]!, user["firstName"]!, user["lastName"]!,
-                                            user["email"]!, user["avatar"]!)));
-                              }).toList()
-                            ];
-                          }
-                        }()))));
+              body: SingleChildScrollView(
+                  child: Center(
+                      child: isLoading
+                          ? const CircularProgressIndicator()
+                          : Column(
+                              children: (() {
+                              if (friends.isEmpty) {
+                                return [const Text("No friends found.")];
+                              } else {
+                                return [
+                                  Padding(
+                                    padding: EdgeInsets.all(15),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                          prefixIcon: Icon(Icons.search), hintText: "Filter by Name/Username/Email"),
+                                      onChanged: (value) {
+                                        filterFriends(value);
+                                      },
+                                    ),
+                                  ),
+                                  SingleChildScrollView(
+                                      child: Column(children: [
+                                    ...filteredFriends.map((user) {
+                                      return SizedBox(
+                                          width: double.maxFinite,
+                                          child: InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ListTransactions(username: user["username"] ?? "")));
+                                              },
+                                              child: User(user["username"]!, user["firstName"]!, user["lastName"]!,
+                                                  user["email"]!, user["avatar"]!)));
+                                    }).toList()
+                                  ]))
+                                ];
+                              }
+                            }())))));
         }));
   }
 }

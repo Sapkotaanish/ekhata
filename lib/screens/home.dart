@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
                               // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                             Container(
-                              height: 420,
+                              height: showLogin ? 420 : 520,
                               child: showLogin ? const Login() : Register(),
                             ),
                             Container(
@@ -62,13 +62,13 @@ class _HomeState extends State<Home> {
                                   child: Center(
                                       child: Text(
                                     showLogin
-                                        ? "Don't have an account? Register Here."
-                                        : "Already got an account? Login Here.",
+                                        ? "Don't have an account?\nRegister Here."
+                                        : "Already got an account?\nLogin Here.",
                                     textAlign: TextAlign.center,
                                     // ignore: prefer_const_constructors
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 18,
+                                      fontSize: 14,
                                     ),
                                   ))),
                             )

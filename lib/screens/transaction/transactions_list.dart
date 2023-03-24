@@ -45,8 +45,14 @@ class _ListTransactionsState extends State<ListTransactions> {
 
   void appendTransaction(Map<String, dynamic> newTransaction) {
     setState(() {
-      transactions = [newTransaction, ...transactions];
+      isLoading = true;
+      getTransactions();
     });
+  }
+
+  String utf8convert(String text) {
+    List<int> bytes = text.toString().codeUnits;
+    return utf8.decode(bytes);
   }
 
   void filterTransaction(Map filters) {
@@ -142,7 +148,6 @@ class _ListTransactionsState extends State<ListTransactions> {
   }
 
   void showForm() {
-    // showDialog(builder: )
     setState(() {
       formOpened = true;
     });
@@ -165,11 +170,9 @@ class _ListTransactionsState extends State<ListTransactions> {
                     padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                     child: FloatingActionButton(
                         onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AddTransaction(username: username, appendTransaction: appendTransaction);
-                              });
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  AddTransaction(username: username, appendTransaction: appendTransaction)));
                         },
                         child: const Icon(Icons.add))),
                 FloatingActionButton.extended(
@@ -272,10 +275,12 @@ class _ListTransactionsState extends State<ListTransactions> {
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         FittedBox(
-                                                          child: Text(transaction["remarks"] ?? "",
+                                                            child: Container(
+                                                          width: MediaQuery.of(context).size.width - 150,
+                                                          child: Text(utf8convert(transaction["remarks"]),
                                                               style: const TextStyle(
                                                                   fontSize: 18.0, fontWeight: FontWeight.w500)),
-                                                        ),
+                                                        )),
                                                         const SizedBox(height: 10),
                                                         Text(DateFormat("h:mm a").format(transactionTime),
                                                             style: const TextStyle(
@@ -290,7 +295,7 @@ class _ListTransactionsState extends State<ListTransactions> {
                                                         const SizedBox(height: 10),
                                                         Text("Added By: ", style: TextStyle(color: Colors.grey[500])),
                                                         Text(transaction["addedBy"] == email ? myUsername : username,
-                                                            style: TextStyle(color: Colors.grey[500])),
+                                                            style: TextStyle(color: Colors.grey[600])),
                                                       ]),
                                                   Column(children: [
                                                     Row(
